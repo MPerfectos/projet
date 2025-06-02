@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Employee Sign Up"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginTop="10dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:hint="Password"
+            android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Full Name" />
+        <EditText
+            android:id="@+id/AgeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Age Name" />
+
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="10dp"
+            android:hint="Phone Number"
+            android:inputType="phone" />
+        <EditText
+            android:id="@+id/expEditText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint=" Work Experience" />
+        <EditText
+            android:id="@+id/SkillEditText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Skill" />
+        <EditText
+            android:id="@+id/EducationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Education" />
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Sign Up" />
+
+        <TextView
+            android:id="@+id/goToSignUpText"
+            android:layout_width="wrap_content"
+android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Sign In"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+</ScrollView>

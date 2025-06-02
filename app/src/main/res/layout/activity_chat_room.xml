@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@android:color/white">
+
+    <!-- ListView لعرض الرسائل -->
+    <ListView
+        android:id="@+id/lvMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:stackFromBottom="true" />
+
+    <!-- حقل إدخال الرسالة في الأسفل -->
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/et_background"
+        android:hint="اكتب رسالتك..."
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:padding="8dp" />
+
+</LinearLayout>

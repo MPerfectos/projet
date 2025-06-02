@@ -1,0 +1,82 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- اسم العمل (إجباري) -->
+        <EditText
+            android:id="@+id/editJobName"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="WorkName"
+            android:inputType="textPersonName" />
+
+        <!-- السعر (إجباري) -->
+        <EditText
+            android:id="@+id/editJobType"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:hint="Work Type" />
+
+        <EditText
+            android:id="@+id/editPrice"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Salary"
+            android:inputType="numberDecimal" />
+
+        <!-- الموقع (إجباري) -->
+        <EditText
+            android:id="@+id/editLocation"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:hint="Location"
+            android:inputType="text" />
+
+        <!-- عدد ساعات العمل -->
+        <EditText
+            android:id="@+id/editHours"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:hint="Working Hours"
+            android:inputType="number" />
+
+        <!-- المهارة المطلوبة -->
+        <EditText
+            android:id="@+id/editSkill"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:hint="Skills" />
+
+        <!-- الخبرة المطلوبة -->
+        <EditText
+            android:id="@+id/editExperience"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:hint="Experience" />
+
+        <!-- نوع العمل -->
+
+        <!-- وقت البدء -->
+        <EditText
+            android:id="@+id/editTextStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="false"
+            android:hint="Time Start" />
+
+        <!-- زر الحفظ -->
+        <Button
+            android:id="@+id/btnSaveRequest"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:text="Save" />
+    </LinearLayout>
+</ScrollView>

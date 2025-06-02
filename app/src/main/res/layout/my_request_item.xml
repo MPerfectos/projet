@@ -1,0 +1,34 @@
+<!-- res/layout/my_request_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+
+    android:orientation="vertical"
+    android:background="#EFEFEF">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="12dp">
+    <TextView
+        android:id="@+id/textJobTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="اسم العمل"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textJobType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="نوع العمل"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="4dp" />
+</LinearLayout>
+</LinearLayout>
