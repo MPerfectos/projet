@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,53 @@ class ChatsActivity : AppCompatActivity() {
             intent.putExtra("userId", userId)
             startActivity(intent)
         }
+
+        val navhome = findViewById<LinearLayout>(R.id.navHome)
+        navhome.setOnClickListener {
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+
+            }
+        val navprofil = findViewById<LinearLayout>(R.id.navProfile)
+        navprofil.setOnClickListener {
+            val intent = Intent(this, Profil::class.java)
+            startActivity(intent)
+
+        }
+        val navmap = findViewById<LinearLayout>(R.id.navMap)
+        navmap.setOnClickListener {
+            val intent = Intent(this, Profil::class.java)
+            startActivity(intent)
+
+        }
+        val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
+        navnotification.setOnClickListener {
+            val intent = Intent(this, Profil::class.java)
+            startActivity(intent)
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     private fun loadChats() {

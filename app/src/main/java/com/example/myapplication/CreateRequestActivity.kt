@@ -1,12 +1,20 @@
 package com.example.myapplication
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import java.util.*
 
 class CreateRequestActivity : AppCompatActivity() {
@@ -15,11 +23,17 @@ class CreateRequestActivity : AppCompatActivity() {
     private lateinit var uid: String
     private var userName: String = ""
 
+    // 🔹 متغيرات جديدة خاصة بالموقع
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var locationGeoPoint: GeoPoint? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_request)
 
         db = FirebaseFirestore.getInstance()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         uid = intent.getStringExtra("uid") ?: ""
 
         if (uid.isEmpty()) {
@@ -37,6 +51,31 @@ class CreateRequestActivity : AppCompatActivity() {
         val editJobType = findViewById<EditText>(R.id.editJobType)
         val textStartTime = findViewById<EditText>(R.id.editTextStartTime)
         val btnSave = findViewById<Button>(R.id.btnSaveRequest)
+        val btnGetCurrentLocation = findViewById<Button>(R.id.btnGetCurrentLocation)
+
+        // 🔹 زر "موقعك حالياً"
+        btnGetCurrentLocation.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1001)
+                return@setOnClickListener
+            }
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val geocoder = Geocoder(this, Locale.getDefault())
+                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    if (addresses != null && addresses.isNotEmpty()) {
+                        val address = addresses[0].getAddressLine(0)
+                        editLocation.setText(address)
+                        locationGeoPoint = GeoPoint(location.latitude, location.longitude)
+                    } else {
+                        Toast.makeText(this, "تعذر تحديد اسم الموقع", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "تعذر الحصول على الموقع الحالي", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         // جلب اسم المستخدم
         db.collection("users").document(uid).get().addOnSuccessListener { doc ->
@@ -58,7 +97,6 @@ class CreateRequestActivity : AppCompatActivity() {
             ).show()
         }
 
-
         // عند الضغط على زر الحفظ
         btnSave.setOnClickListener {
             val jobName = editJobName.text.toString().trim()
@@ -70,10 +108,29 @@ class CreateRequestActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // 🔹 في حال لم يتم تحديد locationGeoPoint مسبقًا، يتم محاولة تحويل النص إلى إحداثيات
+            if (locationGeoPoint == null) {
+                try {
+                    val geocoder = Geocoder(this, Locale.getDefault())
+                    val addressList = geocoder.getFromLocationName(location, 1)
+                    if (!addressList.isNullOrEmpty()) {
+                        val address = addressList[0]
+                        locationGeoPoint = GeoPoint(address.latitude, address.longitude)
+                    } else {
+                        Toast.makeText(this, "الموقع غير صالح", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this, "حدث خطأ في تحديد الموقع", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+
             val requestData = hashMapOf(
                 "jobName" to jobName,
                 "price" to price,
                 "location" to location,
+                "locationGeo" to locationGeoPoint,  // 🔹 تم تخزين الإحداثيات هنا
                 "hours" to editHours.text.toString().trim(),
                 "skill" to editSkill.text.toString().trim(),
                 "experience" to editExperience.text.toString().trim(),

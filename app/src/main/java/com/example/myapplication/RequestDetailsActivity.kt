@@ -1,11 +1,14 @@
 package com.example.myapplication
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 
 class RequestDetailsActivity : AppCompatActivity() {
 
@@ -18,7 +21,10 @@ class RequestDetailsActivity : AppCompatActivity() {
     private lateinit var tvHours: TextView
     private lateinit var tvLocation: TextView
     private lateinit var tvExperience: TextView
+
+    private lateinit var btnLocation: Button
     private lateinit var btnApply: Button
+    private lateinit var btnViewProfile: Button  // ✅ إضافة مرجع الزر الجديد
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -31,37 +37,60 @@ class RequestDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_details)
 
-        tvUserName = findViewById(R.id.tvUserName)
-        tvJobName = findViewById(R.id.tvJobName)
-        tvJobType = findViewById(R.id.tvJobType)
-        tvPrice = findViewById(R.id.tvPrice)
-        tvSkill = findViewById(R.id.tvSkill)
-        tvStartTime = findViewById(R.id.tvStartTime)
-        tvHours = findViewById(R.id.tvHours)
-        tvLocation = findViewById(R.id.tvLocation)
-        tvExperience = findViewById(R.id.tvExperience)
-        btnApply = findViewById(R.id.btnApply)
+        tvUserName     = findViewById(R.id.tvUserName)
+        tvJobName      = findViewById(R.id.tvJobName)
+        tvJobType      = findViewById(R.id.tvJobType)
+        tvPrice        = findViewById(R.id.tvPrice)
+        tvSkill        = findViewById(R.id.tvSkill)
+        tvStartTime    = findViewById(R.id.tvStartTime)
+        tvHours        = findViewById(R.id.tvHours)
+        tvLocation     = findViewById(R.id.tvLocation)
+        tvExperience   = findViewById(R.id.tvExperience)
+
+        btnLocation    = findViewById(R.id.btnLocation)
+        btnApply       = findViewById(R.id.btnApply)
+        btnViewProfile = findViewById(R.id.btnViewProfile)  // ✅ ربط الزر الجديد
 
         currentUid = intent.getStringExtra("currentUid") ?: ""
         creatorUid = intent.getStringExtra("creatorUid") ?: ""
-        requestId = intent.getStringExtra("requestId") ?: ""
+        requestId  = intent.getStringExtra("requestId") ?: ""
 
         loadRequestData()
         checkRoleAndSetupButton()
+
+        // ✅ تنفيذ زر "عرض البروفايل"
+        btnViewProfile.setOnClickListener {
+            val intent = Intent(this, ViewProfileActivity::class.java)
+            intent.putExtra("currentUserId", currentUid)
+            intent.putExtra("otherUserId", creatorUid)
+            startActivity(intent)
+        }
     }
 
     private fun loadRequestData() {
         db.collection("requests").document(requestId).get()
             .addOnSuccessListener { doc ->
-                tvUserName.text = "${doc.getString("userName")}"
-                tvJobName.text = "Work Name: ${doc.getString("jobName")}"
-                tvJobType.text = "Work Type: ${doc.getString("jobType")}"
-                tvPrice.text = "Salary: ${doc.getString("price")}"
-                tvSkill.text = "Skill: ${doc.getString("skill")}"
-                tvStartTime.text = "Time Start: ${doc.getString("startTime")}"
-                tvHours.text = " Working Hours: ${doc.getString("hours")}"
-                tvLocation.text = " Location: ${doc.getString("location")} "
-                tvExperience.text = " Experience: ${doc.getString("experience")}"
+                tvUserName.text   = "${doc.getString("userName")}"
+                tvJobName.text    = "Work Name: ${doc.getString("jobName")}"
+                tvJobType.text    = "Work Type: ${doc.getString("jobType")}"
+                tvPrice.text      = "Salary: ${doc.getString("price")}"
+                tvSkill.text      = "Skill: ${doc.getString("skill")}"
+                tvStartTime.text  = "Time Start: ${doc.getString("startTime")}"
+                tvHours.text      = "Working Hours: ${doc.getString("hours")}"
+                tvLocation.text   = "Location: ${doc.getString("location")} "
+                tvExperience.text = "Experience: ${doc.getString("experience")}"
+
+                val geo: GeoPoint? = doc.getGeoPoint("locationGeo")
+                btnLocation.setOnClickListener {
+                    if (geo != null) {
+                        val uri = Uri.parse("geo:${geo.latitude},${geo.longitude}?q=${geo.latitude},${geo.longitude}")
+                        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+                        mapIntent.setPackage("com.google.android.apps.maps")
+                        startActivity(mapIntent)
+                    } else {
+                        Toast.makeText(this, "لا توجد إحداثيات للموقع", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
     }
 
@@ -80,7 +109,6 @@ class RequestDetailsActivity : AppCompatActivity() {
 
     private fun sendApplication() {
         val appId = "${currentUid}_${creatorUid}_$requestId"
-
         val appRef = db.collection("app").document(appId)
         appRef.get().addOnSuccessListener { snapshot ->
             if (!snapshot.exists()) {
@@ -91,7 +119,6 @@ class RequestDetailsActivity : AppCompatActivity() {
                 )
                 appRef.set(appData)
 
-                // إنشاء دردشة إذا لم تكن موجودة
                 val chatId = if (currentUid < creatorUid)
                     "${currentUid}_$creatorUid" else "${creatorUid}_$currentUid"
 
