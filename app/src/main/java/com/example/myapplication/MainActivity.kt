@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import NotificationsActivity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -146,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this, Profil::class.java).apply {
                             putExtra("uid", uid)
                             putExtra("role", role)
+                            putExtra("role", role)
                         }
                         startActivity(intent)
                     }
@@ -164,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                 firestore.collection("users").document(uid).get()
                     .addOnSuccessListener { document ->
                         val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
+                        val intent = Intent(this, NotificationsActivity::class.java).apply {
                             putExtra("uid", uid)
                             putExtra("role", role)
                         }
