@@ -7,8 +7,8 @@
     <!-- شريط البحث -->
     <EditText
         android:id="@+id/searchEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="395dp"
+        android:layout_height="61dp"
         android:hint="Search for a request"
         android:imeOptions="actionSearch"
         android:singleLine="true" />
@@ -61,56 +61,8 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:weightSum="5"
+        android:weightSum="3"
         android:padding="4dp">
-
-        <!-- Home -->
-        <LinearLayout
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="4dp">
-
-            <ImageView
-                android:id="@+id/iconHome"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/homea"
-                android:contentDescription="Home" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <!-- Map -->
-        <LinearLayout
-            android:id="@+id/navMap"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="4dp">
-
-            <ImageView
-                android:id="@+id/iconMap"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/pin"
-                android:contentDescription="Map" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Map"
-                android:textSize="12sp" />
-        </LinearLayout>
 
         <!-- Notifications -->
         <LinearLayout

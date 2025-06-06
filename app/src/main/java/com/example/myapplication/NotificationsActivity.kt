@@ -1,50 +1,45 @@
+package com.example.myapplication
+
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class NotificationsActivity : AppCompatActivity() {
 
-    private lateinit var uid: String
-    private lateinit var role: String
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: NotificationsAdapter
-    private val notificationsList = mutableListOf<NotificationItem>()
+    private lateinit var listView: ListView
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+    private lateinit var currentUid: String
+    private val notificationsList = mutableListOf<NotificationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
 
-        uid = intent.getStringExtra("uid") ?: return
-        role = intent.getStringExtra("role") ?: return
+        listView = findViewById(R.id.notificationsListView)
+        currentUid = auth.currentUser?.uid ?: return
 
-        recyclerView = findViewById(R.id.notificationsRecyclerView)
-        adapter = NotificationsAdapter(this, notificationsList)
-        recyclerView.adapter = adapter
-
-        fetchNotifications()
+        loadNotifications()
     }
 
-    private fun fetchNotifications() {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("notifications")
-            .whereEqualTo("uid", uid)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshots, error ->
-                if (error != null) {
-                    Toast.makeText(this, "خطأ في تحميل الإشعارات", Toast.LENGTH_SHORT).show()
-                    return@addSnapshotListener
-                }
-
+    private fun loadNotifications() {
+        db.collection("notifications").get()
+            .addOnSuccessListener { result ->
                 notificationsList.clear()
-                for (doc in snapshots!!) {
-                    val notification = doc.toObject(NotificationItem::class.java)
-                    notificationsList.add(notification)
+                for (doc in result) {
+                    val fromId = doc.getString("fromId") ?: continue
+                    val toId = doc.getString("toId") ?: continue
+                    val message = doc.getString("message") ?: ""
+                    val timestamp = doc.getLong("timestamp") ?: 0L
+
+                    if (fromId == currentUid || toId == currentUid) {
+                        val otherUserId = if (fromId == currentUid) toId else fromId
+                        notificationsList.add(NotificationData(otherUserId, message, timestamp))
+                    }
                 }
-                adapter.notifyDataSetChanged()
+                listView.adapter = NotificationAdapter(this, notificationsList)
             }
     }
 }

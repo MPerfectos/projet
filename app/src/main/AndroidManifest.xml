@@ -14,13 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".MyProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewProfile2Activity"
+            android:exported="false" />
+        <activity
             android:name=".NotificationsActivity"
             android:exported="false" />
         <activity
             android:name=".UserDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
             android:name=".Profil"

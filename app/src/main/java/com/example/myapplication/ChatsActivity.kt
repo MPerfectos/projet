@@ -44,30 +44,6 @@ class ChatsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val navhome = findViewById<LinearLayout>(R.id.navHome)
-        navhome.setOnClickListener {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-
-            }
-        val navprofil = findViewById<LinearLayout>(R.id.navProfile)
-        navprofil.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
-            startActivity(intent)
-
-        }
-        val navmap = findViewById<LinearLayout>(R.id.navMap)
-        navmap.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
-            startActivity(intent)
-
-        }
-        val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
-        navnotification.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
-            startActivity(intent)
-
-        }
 
 
 

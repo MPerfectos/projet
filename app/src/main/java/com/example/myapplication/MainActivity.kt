@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import NotificationsActivity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                 firestore.collection("users").document(uid).get()
                     .addOnSuccessListener { document ->
                         val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
+                        val intent = Intent(this, MyProfileActivity::class.java).apply {
                             putExtra("uid", uid)
                             putExtra("role", role)
                         }
@@ -137,28 +136,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
             }
         }
-        val navmaps = findViewById<LinearLayout>(R.id.navMap)
-        navmaps.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                firestore.collection("users").document(uid).get()
-                    .addOnSuccessListener { document ->
-                        val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
-                            putExtra("uid", uid)
-                            putExtra("role", role)
-                            putExtra("role", role)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "فشل في جلب بيانات المستخدم", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
         navnotification.setOnClickListener {
             val uid = auth.currentUser?.uid
