@@ -8,9 +8,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="myapplication"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/yallajobb"
+        android:label="Yalla Job"
+        android:roundIcon="@mipmap/yallyjob"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
@@ -25,9 +25,7 @@
         <activity
             android:name=".UserDetailsActivity"
             android:exported="false" />
-        <activity
-            android:name=".Profil"
-            android:exported="false" />
+
         <activity
             android:name=".ChatRoomActivity"
             android:exported="false" />
@@ -36,7 +34,7 @@
             android:exported="false" />
         <activity
             android:name=".MyThesRequestActivity"
-            android:exported="false" /> <!-- شاشة تسجيل الدخول -->
+            android:exported="false" />
         <activity
             android:name=".SignInActivity"
             android:exported="true">
@@ -45,25 +43,25 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- شاشة اختيار الدور -->
+        </activity>
         <activity
             android:name=".ChooseRoleActivity"
-            android:exported="true" /> <!-- شاشات التسجيل -->
+            android:exported="true" />
         <activity
             android:name=".EmployeeSignUpActivity"
             android:exported="true" />
         <activity
             android:name=".EmployerSignUpActivity"
-            android:exported="true" /> <!-- الصفحة الرئيسية -->
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" /> <!-- إنشاء طلب جديد -->
+            android:exported="true" />
         <activity
             android:name=".CreateRequestActivity"
-            android:exported="false" /> <!-- عرض الطلبات الخاصة -->
+            android:exported="false" />
         <activity
             android:name=".MyRequestsActivity"
-            android:exported="false" /> <!-- تفاصيل الطلب -->
+            android:exported="false" />
         <activity
             android:name=".RequestDetailsActivity"
             android:exported="false" />

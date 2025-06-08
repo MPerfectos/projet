@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/tvHeaderName"
-        android:text="Yalla Jop "
+        android:text="Yalla Job "
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
