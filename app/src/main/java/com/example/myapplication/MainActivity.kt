@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        // التنقل إلى صفحة Aa عند الضغط على navChats
+
         val navChats = findViewById<LinearLayout>(R.id.navChats)
         navChats.setOnClickListener {
             val uid = auth.currentUser?.uid
@@ -244,12 +244,12 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 allRequests = result.map { doc ->
                     JobRequest(
-                        personName = doc.getString("userName") ?: "",
-                        jobTitle = doc.getString("jobName") ?: "",
-                        jobType = doc.getString("jobType") ?: "",
-                        salary = doc.getString("price") ?: "",
+                        personName =( doc.getString("userName") ?: ""),
+                        jobTitle ="Jop Name : " + ( doc.getString("jobName") ?: ""),
+                        jobType = "Type : "+(doc.getString("jobType") ?: ""),
+                        salary = "Salary : "+(doc.getString("price") ?: ""),
                         createdByUid = doc.getString("uid") ?: "",
-                        requestId = doc.id // ← إضافة requestId هنا فقط
+                        requestId = doc.id
                     )
                 }
                 filteredRequests = allRequests
@@ -298,7 +298,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RequestDetailsActivity::class.java).apply {
                 putExtra("currentUid", auth.currentUser?.uid)
                 putExtra("creatorUid", selected.createdByUid)
-                putExtra("requestId", selected.requestId) // ← تمرير requestId
+                putExtra("requestId", selected.requestId)
             }
             startActivity(intent)
         }

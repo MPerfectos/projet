@@ -55,7 +55,8 @@ class RequestDetailsActivity : AppCompatActivity() {
         creatorUid = intent.getStringExtra("creatorUid") ?: ""
         requestId  = intent.getStringExtra("requestId") ?: ""
 
-        // ✅ إخفاء زر "عرض البروفايل" إذا كان المستخدم هو نفسه صاحب الطلب
+
+
         if (currentUid == creatorUid) {
             btnViewProfile.visibility = View.GONE
         }
@@ -129,7 +130,7 @@ class RequestDetailsActivity : AppCompatActivity() {
                 val notificationApply = hashMapOf(
                     "fromId" to currentUid,
                     "toId" to creatorUid,
-                    "message" to "تم التقدم للوظيفة",
+                    "message" to "applied for",
                     "timestamp" to System.currentTimeMillis()
                 )
                 db.collection("notifications").add(notificationApply)
@@ -146,11 +147,11 @@ class RequestDetailsActivity : AppCompatActivity() {
                         )
                         chatRef.set(chatData)
 
-                        // ✅ إشعار بدء المحادثة
+
                         val notificationChat = hashMapOf(
                             "fromId" to currentUid,
                             "toId" to creatorUid,
-                            "message" to "بدأت المحادثة",
+                            "message" to "conversation started ",
                             "timestamp" to System.currentTimeMillis()
                         )
                         db.collection("notifications").add(notificationChat)

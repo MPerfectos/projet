@@ -9,7 +9,7 @@
     <!-- بإمكانك إضافة صورة بروفايل هنا، إن احتجت لاحقاً -->
     <ImageView
         android:id="@+id/imgProfileHeader"
-        android:src="@android:drawable/sym_def_app_icon"
+        android:src="@drawable/img"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center_horizontal"
@@ -18,20 +18,10 @@
 
     <TextView
         android:id="@+id/tvHeaderName"
-        android:text="اسم المستخدم"
+        android:text="Yalla Jop "
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:id="@+id/tvHeaderEmail"
-        android:text="user@example.com"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"/>

@@ -8,64 +8,71 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        >
 
         <TextView
             android:id="@+id/tvName"
-            android:text="اسم المستخدم"
-            android:textSize="24sp"
+            android:text="Name"
+            android:textSize="20sp"
             android:textStyle="bold"
+            android:padding="20dp"
             android:layout_marginBottom="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvEmail"
-            android:text="البريد الإلكتروني"
-            android:layout_marginTop="8dp"
+            android:text=" email"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvPhone"
-            android:text="رقم الهاتف"
-            android:layout_marginTop="8dp"
+            android:text="Phone"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvAge"
-            android:text="العمر"
-            android:layout_marginTop="8dp"
+            android:text="Age"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvEducation"
-            android:text="التعليم"
-            android:layout_marginTop="8dp"
+            android:text="Education"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvSkill"
-            android:text="المهارة"
-            android:layout_marginTop="8dp"
+            android:text="Skills"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvExp"
-            android:text="الخبرة"
-            android:layout_marginTop="8dp"
+            android:text="Exp"
+            android:textSize="20sp"
+            android:padding="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnMessage"
-            android:text="مراسلة"
+            android:text="Correspondence"
             android:layout_marginTop="24dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 </ScrollView>

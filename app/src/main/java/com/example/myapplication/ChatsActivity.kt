@@ -35,7 +35,7 @@ class ChatsActivity : AppCompatActivity() {
 
         loadChats()
 
-        // ✅ عند الضغط على عنصر، افتح صفحة المحادثة
+
         listView.setOnItemClickListener { _, _, position, _ ->
             val selectedChat = chatList[position]
             val intent = Intent(this, ChatRoomActivity::class.java)

@@ -43,15 +43,15 @@ class MyThesRequestActivity : AppCompatActivity() {
     private fun loadRequestDetails() {
         db.collection("requests").document(requestId).get()
             .addOnSuccessListener { doc ->
-                findViewById<EditText>(R.id.etJobName).setText(doc.getString("jobName") ?: "")
-                findViewById<EditText>(R.id.etJobType).setText(doc.getString("jobType") ?: "")
-                findViewById<EditText>(R.id.etPrice).setText(doc.getString("price") ?: "")
-                findViewById<EditText>(R.id.etHours).setText(doc.getString("hours") ?: "")
-                findViewById<EditText>(R.id.etLocation).setText(doc.getString("location") ?: "")
-                findViewById<EditText>(R.id.etSkill).setText(doc.getString("skill") ?: "")
-                findViewById<EditText>(R.id.etExperience).setText(doc.getString("experience") ?: "")
-                findViewById<EditText>(R.id.etStartTime).setText(doc.getString("startTime") ?: "")
-                findViewById<EditText>(R.id.etUserName).setText(doc.getString("userName") ?: "")
+                findViewById<EditText>(R.id.etJobName).setText("Jop name : "+(doc.getString("jobName") ?: ""))
+                findViewById<EditText>(R.id.etJobType).setText("Jop type : "+(doc.getString("jobType") ?: ""))
+                findViewById<EditText>(R.id.etPrice).setText("Salary : "+(doc.getString("price") ?: ""))
+                findViewById<EditText>(R.id.etHours).setText("Working Hours : "+(doc.getString("hours") ?: ""))
+                findViewById<EditText>(R.id.etLocation).setText("Location : "+(doc.getString("location") ?: ""))
+                findViewById<EditText>(R.id.etSkill).setText("skills : "+(doc.getString("skill") ?: ""))
+                findViewById<EditText>(R.id.etExperience).setText("experience : "+(doc.getString("experience") ?: ""))
+                findViewById<EditText>(R.id.etStartTime).setText("Time start :"+(doc.getString("startTime") ?: ""))
+
             }
     }
 

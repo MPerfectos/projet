@@ -4,7 +4,6 @@
     android:background="#FFFFFF"
     android:padding="16dp">
 
-    <!-- شريط البحث -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="395dp"

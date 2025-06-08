@@ -52,7 +52,7 @@ class UserDetailsActivity : AppCompatActivity() {
 
         loadUserDetails()
 
-        // 🔒 لا نعدل شيء في هذا الزر حسب التعليمات
+
         btnMessage.setOnClickListener {
             if (currentUid.isEmpty()) {
                 Toast.makeText(this, "لم يتم تسجيل الدخول", Toast.LENGTH_SHORT).show()
@@ -78,7 +78,7 @@ class UserDetailsActivity : AppCompatActivity() {
                         val notification = hashMapOf(
                             "fromId" to currentUid,
                             "toId" to otherUid,
-                            "message" to "بدأت المحادثة",
+                            "message" to "conversation started",
                             "timestamp" to System.currentTimeMillis()
                         )
                         db.collection("notifications").add(notification)
@@ -112,12 +112,12 @@ class UserDetailsActivity : AppCompatActivity() {
             .addOnSuccessListener { doc ->
                 if (doc != null && doc.exists()) {
                     tvUserName.text = doc.getString("name") ?: "غير محدد"
-                    tvCompany.text = doc.getString("company") ?: "غير محدد"
-                    tvEmail.text = doc.getString("email") ?: "غير محدد"
-                    tvPhone.text = doc.getString("phone") ?: "غير محدد"
-                    tvAge.text = doc.getString("age") ?: "غير محدد"
-                    tvLocation.text = doc.getString("location") ?: "غير محدد"
-                    tvDescription.text = doc.getString("description") ?: "غير محدد"
+                    tvCompany.text ="Company Name: "+( doc.getString("company") ?: "غير محدد")
+                    tvEmail.text = "Emaile : "+(doc.getString("email") ?: "غير محدد")
+                    tvPhone.text = "Phone Number : "+(doc.getString("phone") ?: "غير محدد")
+                    tvAge.text = "Age : "+(doc.getString("age") ?: "غير محدد")
+                    tvLocation.text = "Location"+(doc.getString("location") ?: "غير محدد")
+                    tvDescription.text = "Description : "+(doc.getString("description") ?: "غير محدد")
                 } else {
                     Toast.makeText(this, "لم يتم العثور على بيانات المستخدم", Toast.LENGTH_SHORT).show()
                 }

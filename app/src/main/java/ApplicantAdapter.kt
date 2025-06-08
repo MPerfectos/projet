@@ -12,6 +12,7 @@ class ApplicantAdapter(
     private val applicants: List<Pair<String, String>>
 ) : ArrayAdapter<Pair<String, String>>(context, 0, applicants) {
 
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val applicant = applicants[position]
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_applicant, parent, false)

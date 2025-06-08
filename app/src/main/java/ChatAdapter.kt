@@ -18,7 +18,7 @@ class ChatAdapter(private val context: Context, private val chats: List<ChatPrev
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.chat_item, parent, false)
         val chat = chats[position]
         val otherUserText = view.findViewById<TextView>(R.id.chatUserName)
-        otherUserText.text = "User: ${chat.otherUserId}" // يمكن لاحقًا تحميل الاسم من Firestore
+        otherUserText.text = " User : ${chat.otherUserId}" // يمكن لاحقًا تحميل الاسم من Firestore
         return view
     }
 }

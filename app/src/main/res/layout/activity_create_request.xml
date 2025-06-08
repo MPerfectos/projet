@@ -7,7 +7,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Create Request "
+            android:textSize="22sp"
+            android:textStyle="bold" />
         <!-- اسم العمل (إجباري) -->
         <EditText
             android:id="@+id/editJobName"
@@ -50,7 +57,7 @@
                 android:id="@+id/btnGetCurrentLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
-                android:text="موقعك حالياً" />
+                android:text="Your Location" />
         </LinearLayout>
 
         <!-- عدد ساعات العمل -->

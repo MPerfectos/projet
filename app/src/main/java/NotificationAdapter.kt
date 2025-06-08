@@ -32,7 +32,7 @@ class NotificationAdapter(
 
         val notification = notifications[position]
 
-        // جلب اسم الطرف الآخر
+
         db.collection("users").document(notification.otherUserId).get()
             .addOnSuccessListener { doc ->
                 val name = doc.getString("name") ?: "مستخدم"
@@ -41,7 +41,7 @@ class NotificationAdapter(
 
         tvMessage.text = notification.message
 
-        val sdf = SimpleDateFormat("d MMM yyyy - HH:mm", Locale("ar"))
+        val sdf = SimpleDateFormat(" MMM yyyy - HH:mm", Locale("ar"))
         val dateStr = sdf.format(Date(notification.timestamp))
         tvTime.text = dateStr
 

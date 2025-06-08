@@ -7,4 +7,5 @@ data class JobRequest(
     val salary: String = "",
     val createdByUid: String = "",
     val requestId: String = ""
+
 )

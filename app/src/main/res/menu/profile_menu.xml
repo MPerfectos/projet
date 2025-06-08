@@ -4,19 +4,19 @@
     <!-- عنصر “تعديل الملف الشخصي” -->
     <item
         android:id="@+id/naveditprofile"
-        android:title="تعديل الملف الشخصي"
+        android:title="  EDit Profil"
         android:icon="@android:drawable/ic_menu_edit"/>
 
     <!-- عنصر “اختيار اللغة” -->
     <item
         android:id="@+id/nav_language"
-        android:title="اللغة"
+        android:title="Langage"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"/>
 
     <!-- عنصر “الوضع الداكن” (ToggleButton كعرض فقط) -->
     <item
         android:id="@+id/navdarkmode"
-        android:title="الوضع الداكن">
+        android:title=" Dark mode">
         <menu>
             <!-- سنستخدم actionLayout لمكوّن التبديل -->
             <item
@@ -30,7 +30,7 @@
     <!-- عنصر “تسجيل الخروج” -->
     <item
         android:id="@+id/nav_sign_out"
-        android:title="تسجيل الخروج"
+        android:title="Sing Out "
         android:icon="@android:drawable/ic_lock_power_off"/>
 
 </menu>

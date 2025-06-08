@@ -29,8 +29,8 @@ class MyRequestsAdapter(
         val jobTitle = requestData["jobName"]?.toString() ?: ""
         val jobType = requestData["jobType"]?.toString() ?: ""
 
-        jobTitleView.text = jobTitle
-        jobTypeView.text = jobType
+        jobTitleView.text ="Name Jop :" + jobTitle
+        jobTypeView.text = "Type Jop :" + jobType
 
         return view
     }

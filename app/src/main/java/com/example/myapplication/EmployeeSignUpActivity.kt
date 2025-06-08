@@ -44,7 +44,7 @@ class EmployeeSignUpActivity : AppCompatActivity() {
             val education = educationEt.text.toString().trim()
             val exp = expEt.text.toString().trim()
             if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || phone.isEmpty() || age.isEmpty() || education.isEmpty() || exp.isEmpty() || skill.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please  fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

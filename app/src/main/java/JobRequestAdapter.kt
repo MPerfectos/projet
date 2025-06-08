@@ -12,6 +12,7 @@ class JobRequestAdapter(
     private val dataList: List<JobRequest>
 ) : BaseAdapter() {
 
+
     override fun getCount(): Int = dataList.size
     override fun getItem(position: Int): Any = dataList[position]
     override fun getItemId(position: Int): Long = position.toLong()

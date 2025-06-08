@@ -28,12 +28,12 @@ class MessageAdapter(
         val tvMessage = view.findViewById<TextView>(R.id.tvMessage)
         val message = messages[position]
 
-        // إذا كان المرسل هو المستخدم الحالي، نضيف بادئة "أنا: " قبل المحتوى
-        // وإلا نضيف بادئة "مي: " قبل المحتوى
+
+
         tvMessage.text = if (message.senderId == currentUserId) {
-            "أنا: ${message.content}"
+            " me  : ${message.content}"
         } else {
-            "هو : ${message.content}"
+            " : ${message.content}"
         }
 
         return view

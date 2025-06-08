@@ -22,7 +22,7 @@
             android:contentDescription="Settings Icon"
             android:padding="8dp"/>
 
-        <!-- بيانات المستخدم العامة -->
+
         <TextView
             android:id="@+id/tvName"
             android:text="Name"

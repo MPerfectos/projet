@@ -18,6 +18,7 @@ class NotificationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
 
+
         listView = findViewById(R.id.notificationsListView)
         currentUid = auth.currentUser?.uid ?: return
 

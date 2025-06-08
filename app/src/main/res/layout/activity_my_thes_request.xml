@@ -8,77 +8,79 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- حقول التفاصيل -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="My Request"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
         <EditText
             android:id="@+id/etJobName"
-            android:hint="اسم العمل"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="Jop Name" />
 
         <EditText
             android:id="@+id/etJobType"
-            android:hint="نوع العمل"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="57dp"
+            android:enabled="false"
+            android:hint="Type" />
 
         <EditText
             android:id="@+id/etPrice"
-            android:hint="السعر"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="62dp"
+            android:enabled="false"
+            android:hint="Salary" />
 
         <EditText
             android:id="@+id/etHours"
-            android:hint="عدد الساعات"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="59dp"
+            android:enabled="false"
+            android:hint="HOurs" />
 
         <EditText
             android:id="@+id/etLocation"
-            android:hint="الموقع"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="59dp"
+            android:enabled="false"
+            android:hint="Loction" />
 
         <EditText
             android:id="@+id/etSkill"
-            android:hint="المهارة"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="skills" />
 
         <EditText
             android:id="@+id/etExperience"
-            android:hint="الخبرة"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="exp" />
 
         <EditText
             android:id="@+id/etStartTime"
-            android:hint="وقت البدء"
-            android:enabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="57dp"
+            android:enabled="false"
+            android:hint=" Time Start" />
 
-        <EditText
-            android:id="@+id/etUserName"
-            android:hint="اسم صاحب العمل"
-            android:enabled="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <!-- زر الحذف -->
         <Button
             android:id="@+id/btnDeleteRequest"
-            android:text="حذف الطلب"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            android:text=" Delete request" />
 
         <!-- عنوان -->
         <TextView
@@ -91,7 +93,7 @@
         <!-- قائمة المتقدمين -->
         <TextView
             android:id="@+id/tvNoApplicants"
-            android:text="لا يوجد متقدمين"
+            android:text="No One"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -102,11 +104,11 @@
         <ListView
             android:id="@+id/listViewApplicants"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="1dp"
+            android:layout_height="247dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="24dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
             android:scrollbars="none" />
 
 

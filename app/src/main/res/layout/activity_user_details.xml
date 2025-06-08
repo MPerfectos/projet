@@ -15,16 +15,18 @@
             android:id="@+id/tvUserName1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الاسم"
+            android:text="Name"
+            android:layout_marginBottom="16dp"
             android:textSize="20sp"
-            android:padding="8dp" />
+            android:padding="20dp"
+            android:textStyle="bold"/>
 
         <!-- الشركة -->
         <TextView
             android:id="@+id/tvCompany1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الشركة"
+            android:text="Company Name"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -33,7 +35,7 @@
             android:id="@+id/tvEmail1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="البريد الإلكتروني"
+            android:text="Emaile"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -42,7 +44,7 @@
             android:id="@+id/tvPhone1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الهاتف"
+            android:text="Phone"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -51,7 +53,7 @@
             android:id="@+id/tvAge1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="العمر"
+            android:text="Age"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -60,7 +62,7 @@
             android:id="@+id/tvLocation1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الموقع"
+            android:text="Loction"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -69,7 +71,7 @@
             android:id="@+id/tvDescription1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="الوصف"
+            android:text="Description"
             android:textSize="20sp"
             android:padding="8dp" />
 
@@ -78,7 +80,7 @@
             android:id="@+id/btnMessage1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="مراسلة الآن"
+            android:text=" Correspondence"
             android:layout_marginTop="24dp" />
 
     </LinearLayout>

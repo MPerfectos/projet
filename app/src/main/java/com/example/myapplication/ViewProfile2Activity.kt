@@ -75,12 +75,12 @@ class ViewProfile2Activity : AppCompatActivity() {
             .addOnSuccessListener { doc ->
                 if (doc != null && doc.exists()) {
                     tvName.text = doc.getString("name") ?: "غير معروف"
-                    tvEmail.text = doc.getString("email") ?: "غير معروف"
-                    tvPhone.text = doc.getString("phone") ?: "غير معروف"
-                    tvAge.text = doc.getString("age") ?: "غير معروف"
-                    tvEducation.text = doc.getString("education") ?: "غير معروف"
-                    tvSkill.text = doc.getString("skill") ?: "غير معروف"
-                    tvExp.text = doc.getString("exp") ?: "غير معروف"
+                    tvEmail.text = "Email : "+(doc.getString("email") ?: "غير معروف")
+                    tvPhone.text = "Phoune Nomber : "+(doc.getString("phone") ?: "غير معروف")
+                    tvAge.text = "Age : "+(doc.getString("age") ?: "غير معروف")
+                    tvEducation.text = "Education : "+(doc.getString("education") ?: "غير معروف")
+                    tvSkill.text = "Skill : "+(doc.getString("skill") ?: "غير معروف")
+                    tvExp.text = "Expertise : "+(doc.getString("exp") ?: "غير معروف")
                 } else {
                     Toast.makeText(this, "المستخدم غير موجود في قاعدة البيانات", Toast.LENGTH_SHORT).show()
                     finish()

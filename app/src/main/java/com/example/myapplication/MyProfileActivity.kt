@@ -41,7 +41,7 @@ class MyProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var tvDescription: TextView
     private lateinit var tvLocationEmployer: TextView
 
-    // إعداد Firebase
+
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -101,27 +101,27 @@ class MyProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
                     // بيانات عامة
-                    tvName.text = doc.getString("name") ?: ""
-                    tvEmail.text = doc.getString("email") ?: ""
-                    tvPhone.text = doc.getString("phone") ?: ""
-                    tvAge.text = doc.getString("age") ?: ""
+                    tvName.text =" Name : " + (doc.getString("name") ?: "")
+                    tvEmail.text ="Email : "+( doc.getString("email") ?: "")
+                    tvPhone.text ="phone Number : "+( doc.getString("phone") ?: "")
+                    tvAge.text = "Age : "+(doc.getString("age") ?: "")
 
                     // أظهر المخفي بناءً على الدور
                     if (role == "employee") {
                         groupEmployee.visibility = View.VISIBLE
                         groupEmployer.visibility = View.GONE
 
-                        tvSkill.text = doc.getString("skill") ?: ""
-                        tvEducation.text = doc.getString("education") ?: ""
-                        tvExp.text = doc.getString("exp") ?: ""
+                        tvSkill.text ="Skills : " +(doc.getString("skill") ?: "")
+                        tvEducation.text ="Education : "+ (doc.getString("education") ?: "")
+                        tvExp.text = "experience : "+(doc.getString("exp") ?: "")
                     } else {
                         // employer
                         groupEmployee.visibility = View.GONE
                         groupEmployer.visibility = View.VISIBLE
 
-                        tvCompany.text = doc.getString("companyName") ?: ""
-                        tvDescription.text = doc.getString("description") ?: ""
-                        tvLocationEmployer.text = doc.getString("location") ?: ""
+                        tvCompany.text = "Company Name : "+(doc.getString("companyName") ?: "")
+                        tvDescription.text = "Description : "+(doc.getString("description") ?: "")
+                        tvLocationEmployer.text = "Location : "+(doc.getString("location") ?: "")
                     }
                 } else {
                     Toast.makeText(this, "المستخدم غير موجود", Toast.LENGTH_SHORT).show()
@@ -308,16 +308,16 @@ class MyProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         var selectedIndex = 0
 
         AlertDialog.Builder(this)
-            .setTitle("اختر اللغة")
+            .setTitle("Choose a language ")
             .setSingleChoiceItems(languages, selectedIndex) { dialog, which ->
                 selectedIndex = which
             }
-            .setPositiveButton("حفظ") { dialog, _ ->
+            .setPositiveButton("Save") { dialog, _ ->
                 // هنا يمكنك حفظ الخيار في SharedPreferences مثلاً
                 Toast.makeText(this, "تم اختيار: ${languages[selectedIndex]}", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
-            .setNegativeButton("إلغاء") { dialog, _ ->
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
