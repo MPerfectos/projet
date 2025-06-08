@@ -42,6 +42,17 @@ android {
 }
 
 dependencies {
+
+        // Existing dependencies...
+
+        // Circle ImageView for rounded profile pictures
+        implementation( libs.circleimageview)
+
+        // If you want to load images from URLs (optional)
+        implementation(libs.glide)
+
+        // Material Design Components (if not already included)
+    implementation(libs.material.v190)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,7 +62,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -15,6 +16,8 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.myapplication.model.JobRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,6 +32,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var searchBar: EditText
 
+    // Navigation items
+    private lateinit var navHome: LinearLayout
+    private lateinit var navMap: LinearLayout
+    private lateinit var navNotifications: LinearLayout
+    private lateinit var navChats: LinearLayout
+    private lateinit var navProfile: LinearLayout
+
     private var currentPage = 0
     private val itemsPerPage = 5
     private var allRequests = listOf<JobRequest>()
@@ -37,35 +47,80 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Enable edge-to-edge and set status bar appearance
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            isAppearanceLightStatusBars = false
+        }
+
         setContentView(R.layout.activity_main)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        initializeViews()
+        setupAnimations()
+
+        if (!isConnected()) {
+            showStyledToast("No internet connection available")
+            return
+        }
+
+        checkUserRole()
+        setupClickListeners()
+        setupSearchFunctionality()
+        setupScrollListener()
+        setupNavigation()
+    }
+
+    private fun initializeViews() {
         btnCreateRequest = findViewById(R.id.btnNewRequest)
         btnViewMyRequests = findViewById(R.id.btnMyRequests)
         listView = findViewById(R.id.listView)
         searchBar = findViewById(R.id.searchEditText)
 
-        if (!isConnected()) {
-            Toast.makeText(this, "لا يوجد اتصال بالإنترنت", Toast.LENGTH_LONG).show()
-            return
+        navHome = findViewById(R.id.navHome)
+        navMap = findViewById(R.id.navMap)
+        navNotifications = findViewById(R.id.navNotifications)
+        navChats = findViewById(R.id.navChats)
+        navProfile = findViewById(R.id.navProfile)
+    }
+
+    private fun setupAnimations() {
+        // Animate search bar on focus
+        searchBar.setOnFocusChangeListener { _, hasFocus ->
+            val scaleX = if (hasFocus) 1.02f else 1.0f
+            val scaleY = if (hasFocus) 1.02f else 1.0f
+
+            ObjectAnimator.ofFloat(searchBar.parent as View, "scaleX", scaleX).apply {
+                duration = 200
+                start()
+            }
+            ObjectAnimator.ofFloat(searchBar.parent as View, "scaleY", scaleY).apply {
+                duration = 200
+                start()
+            }
         }
+    }
 
-        checkUserRole()
-
+    private fun setupClickListeners() {
         btnCreateRequest.setOnClickListener {
+            animateButtonPress(it)
             val intent = Intent(this, CreateRequestActivity::class.java)
             intent.putExtra("uid", auth.currentUser?.uid)
             startActivity(intent)
         }
 
         btnViewMyRequests.setOnClickListener {
-            val intent1 = Intent(this, MyRequestsActivity::class.java)
-            intent1.putExtra("uid", auth.currentUser?.uid)
-            startActivity(intent1)
+            animateButtonPress(it)
+            val intent = Intent(this, MyRequestsActivity::class.java)
+            intent.putExtra("uid", auth.currentUser?.uid)
+            startActivity(intent)
         }
+    }
 
+    private fun setupSearchFunctionality() {
         searchBar.setOnEditorActionListener { _, actionId, event ->
             val isEnterPressed = (event != null
                     && event.keyCode == KeyEvent.KEYCODE_ENTER
@@ -77,7 +132,9 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
+    }
 
+    private fun setupScrollListener() {
         listView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
 
@@ -95,138 +152,84 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        // التنقل إلى صفحة Aa عند الضغط على navChats
-        val navChats = findViewById<LinearLayout>(R.id.navChats)
+    }
+
+    private fun setupNavigation() {
         navChats.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                firestore.collection("users").document(uid).get()
-                    .addOnSuccessListener { document ->
-                        val role = document.getString("role") ?: ""
-                        val intent = Intent(this, ChatsActivity::class.java).apply {
-                            putExtra("uid", uid)
-                            putExtra("role", role)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "فشل في جلب بيانات المستخدم", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
-            }
-        }
-        val navprofiles = findViewById<LinearLayout>(R.id.navProfile)
-        navprofiles.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                firestore.collection("users").document(uid).get()
-                    .addOnSuccessListener { document ->
-                        val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
-                            putExtra("uid", uid)
-                            putExtra("role", role)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "فشل في جلب بيانات المستخدم", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
-            }
-        }
-        val navmaps = findViewById<LinearLayout>(R.id.navMap)
-        navmaps.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                firestore.collection("users").document(uid).get()
-                    .addOnSuccessListener { document ->
-                        val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
-                            putExtra("uid", uid)
-                            putExtra("role", role)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "فشل في جلب بيانات المستخدم", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
-            }
+            animateNavItem(it)
+            navigateWithUserData(ChatsActivity::class.java)
         }
 
-        val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
-        navnotification.setOnClickListener {
-            val uid = auth.currentUser?.uid
-            if (uid != null) {
-                firestore.collection("users").document(uid).get()
-                    .addOnSuccessListener { document ->
-                        val role = document.getString("role") ?: ""
-                        val intent = Intent(this, Profil::class.java).apply {
-                            putExtra("uid", uid)
-                            putExtra("role", role)
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "فشل في جلب بيانات المستخدم", Toast.LENGTH_SHORT).show()
-                    }
-            } else {
-                Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
-            }
+        navProfile.setOnClickListener {
+            animateNavItem(it)
+            navigateWithUserData(ProfileActivity::class.java)
         }
 
+        navMap.setOnClickListener {
+            animateNavItem(it)
+            navigateWithUserData(ProfileActivity::class.java) // Replace with actual Map activity
+        }
 
+        navNotifications.setOnClickListener {
+            animateNavItem(it)
+            navigateWithUserData(ProfileActivity::class.java) // Replace with actual Notifications activity
+        }
+    }
 
+    private fun animateButtonPress(view: View) {
+        ObjectAnimator.ofFloat(view, "scaleX", 0.95f).apply {
+            duration = 100
+            start()
+        }
+        ObjectAnimator.ofFloat(view, "scaleY", 0.95f).apply {
+            duration = 100
+            start()
+        }
 
+        view.postDelayed({
+            ObjectAnimator.ofFloat(view, "scaleX", 1.0f).apply {
+                duration = 100
+                start()
+            }
+            ObjectAnimator.ofFloat(view, "scaleY", 1.0f).apply {
+                duration = 100
+                start()
+            }
+        }, 100)
+    }
 
+    private fun animateNavItem(view: View) {
+        ObjectAnimator.ofFloat(view, "alpha", 0.7f).apply {
+            duration = 150
+            start()
+        }
 
+        view.postDelayed({
+            ObjectAnimator.ofFloat(view, "alpha", 1.0f).apply {
+                duration = 150
+                start()
+            }
+        }, 150)
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    private fun navigateWithUserData(destinationClass: Class<*>) {
+        val uid = auth.currentUser?.uid
+        if (uid != null) {
+            firestore.collection("users").document(uid).get()
+                .addOnSuccessListener { document ->
+                    val role = document.getString("role") ?: ""
+                    val intent = Intent(this, destinationClass).apply {
+                        putExtra("uid", uid)
+                        putExtra("role", role)
+                    }
+                    startActivity(intent)
+                }
+                .addOnFailureListener {
+                    showStyledToast("Failed to fetch user data")
+                }
+        } else {
+            showStyledToast("User not logged in")
+        }
     }
 
     private fun isConnected(): Boolean {
@@ -239,7 +242,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkUserRole() {
         val uid = auth.currentUser?.uid
         if (uid == null) {
-            Toast.makeText(this, "المستخدم غير مسجل الدخول", Toast.LENGTH_SHORT).show()
+            showStyledToast("User not logged in")
             return
         }
 
@@ -256,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                 fetchAllRequests()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "فشل في الحصول على الدور", Toast.LENGTH_SHORT).show()
+                showStyledToast("Failed to get user role")
             }
     }
 
@@ -270,7 +273,7 @@ class MainActivity : AppCompatActivity() {
                         jobType = doc.getString("jobType") ?: "",
                         salary = doc.getString("price") ?: "",
                         createdByUid = doc.getString("uid") ?: "",
-                        requestId = doc.id // ← إضافة requestId هنا فقط
+                        requestId = doc.id
                     )
                 }
                 filteredRequests = allRequests
@@ -278,7 +281,7 @@ class MainActivity : AppCompatActivity() {
                 updateListView()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "فشل في تحميل الطلبات", Toast.LENGTH_SHORT).show()
+                showStyledToast("Failed to load requests")
             }
     }
 
@@ -319,11 +322,15 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RequestDetailsActivity::class.java).apply {
                 putExtra("currentUid", auth.currentUser?.uid)
                 putExtra("creatorUid", selected.createdByUid)
-                putExtra("requestId", selected.requestId) // ← تمرير requestId
+                putExtra("requestId", selected.requestId)
             }
             startActivity(intent)
         }
 
         isLoadingPage = false
+    }
+
+    private fun showStyledToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

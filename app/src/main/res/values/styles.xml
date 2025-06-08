@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryDark">@color/primary_blue</item>
+        <item name="colorAccent">@color/primary_blue</item>
+        <item name="android:windowBackground">@color/dark_background</item>
+    </style>
 
+    <style name="CardStyle">
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardBackgroundColor">@color/card_background</item>
+    </style>
+
+    <style name="HeaderTextStyle">
+        <item name="android:textSize">@dimen/text_xxlarge</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="BalanceTextStyle">
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="HoursTextStyle">
+        <item name="android:textSize">@dimen/text_massive</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="CardTitleStyle">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <style name="SecondaryTextStyle">
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <style name="NavTextStyle">
+        <item name="android:textSize">@dimen/text_tiny</item>
+        <item name="android:textColor">@color/nav_inactive</item>
+    </style>
+
+    <style name="NavTextActiveStyle" parent="NavTextStyle">
+        <item name="android:textColor">@color/nav_active</item>
+    </style>
     <style name="JobDetail">JobDetail</style>
 </resources>

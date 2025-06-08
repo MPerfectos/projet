@@ -1,146 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:padding="16dp">
+    android:background="#0F0F0F"
+    android:padding="0dp">
 
+    <!-- Header with tabs -->
+    <LinearLayout
+        android:id="@+id/headerTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#0F0F0F"
+        android:paddingTop="16dp"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="16dp"
+        android:gravity="center">
+
+        <!-- Private Tab -->
+        <LinearLayout
+            android:id="@+id/tabPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/tab_selected_bg"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="24dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Groups Tab -->
+        <LinearLayout
+            android:id="@+id/tabGroups"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:background="@drawable/tab_unselected_bg"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Groups"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Chat List -->
     <ListView
         android:id="@+id/chatsListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp"/>
+        android:layout_below="@id/headerTabs"
+        android:layout_above="@id/bottomNavigation"
+        android:background="#0F0F0F"
+        android:divider="@null"
+        android:paddingHorizontal="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent" />
+
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="#FFFFFF"
+        android:background="#0F0F0F"
         android:weightSum="5"
-        android:padding="4dp">
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp"
+        android:elevation="8dp">
 
         <!-- Home -->
         <LinearLayout
             android:id="@+id/navHome"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
             <ImageView
                 android:id="@+id/iconHome"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/home"
-                android:contentDescription="Home" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_feed"
+                android:contentDescription="Home"
+                app:tint="#666666" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
-                android:textSize="12sp" />
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
         <!-- Map -->
         <LinearLayout
             android:id="@+id/navMap"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
             <ImageView
                 android:id="@+id/iconMap"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/pin"
-                android:contentDescription="Map" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_map"
+                android:contentDescription="Map"
+                app:tint="#666666" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Map"
-                android:textSize="12sp" />
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Chats (Active) -->
+        <LinearLayout
+            android:id="@+id/navChats"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iconChats"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/messengera"
+                    android:contentDescription="Chats"
+                    app:tint="#00FF88" />
+
+                <!-- Active indicator line -->
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chats"
+                android:textColor="#00FF88"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
         <!-- Notifications -->
         <LinearLayout
             android:id="@+id/navNotifications"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
             <ImageView
                 android:id="@+id/iconNotifications"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/notificationbell"
-                android:contentDescription="Notifications" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_bell"
+                android:contentDescription="Notifications"
+                app:tint="#666666" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Notification"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <!-- Chats -->
-        <LinearLayout
-            android:id="@+id/navChats"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="4dp">
-
-            <ImageView
-                android:id="@+id/iconChats"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/messengera"
-                android:contentDescription="Chats" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chats"
-                android:textSize="12sp" />
+                android:text="Alerts"
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
         <!-- Profile -->
         <LinearLayout
             android:id="@+id/navProfile"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless">
 
             <ImageView
                 android:id="@+id/iconProfile"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/user"
-                android:contentDescription="Profile" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile"
+                android:contentDescription="Profile"
+                app:tint="#666666" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile"
-                android:textSize="12sp" />
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

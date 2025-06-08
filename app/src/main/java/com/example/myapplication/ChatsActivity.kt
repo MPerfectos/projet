@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.myapplication.adapters.ChatAdapter
+import com.example.myapplication.ChatAdapter
 import com.example.myapplication.model.ChatPreview
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -35,61 +35,32 @@ class ChatsActivity : AppCompatActivity() {
 
         loadChats()
 
-        // ✅ عند الضغط على عنصر، افتح صفحة المحادثة
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val selectedChat = chatList[position]
-            val intent = Intent(this, ChatRoomActivity::class.java)
-            intent.putExtra("chatId", selectedChat.chatId)
-            intent.putExtra("userId", userId)
-            startActivity(intent)
-        }
+        // Remove the ListView.setOnItemClickListener as it conflicts with the adapter's click listener
+        // The click handling is now done in the ChatAdapter
 
         val navhome = findViewById<LinearLayout>(R.id.navHome)
         navhome.setOnClickListener {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
-            }
         val navprofil = findViewById<LinearLayout>(R.id.navProfile)
         navprofil.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-
         }
+
         val navmap = findViewById<LinearLayout>(R.id.navMap)
         navmap.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-
         }
+
         val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
         navnotification.setOnClickListener {
-            val intent = Intent(this, Profil::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     private fun loadChats() {
@@ -110,7 +81,15 @@ class ChatsActivity : AppCompatActivity() {
                                 .addOnSuccessListener { userDoc ->
                                     val otherName = userDoc.getString("name") ?: "مستخدم"
                                     chatList.add(ChatPreview(chatId = doc.id, otherUserId = otherName))
-                                    listView.adapter = ChatAdapter(this, chatList)
+
+                                    // Create adapter with callback function for chat clicks
+                                    listView.adapter = ChatAdapter(this, chatList) { selectedChat ->
+                                        // This callback is called when a chat is clicked
+                                        val intent = Intent(this, ChatRoomActivity::class.java)
+                                        intent.putExtra("chatId", selectedChat.chatId)
+                                        intent.putExtra("userId", userId)
+                                        startActivity(intent)
+                                    }
                                 }
                         }
                     }
