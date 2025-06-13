@@ -3,26 +3,38 @@ package com.example.myapplication
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.jvm.java
+import androidx.core.content.edit
 
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+
+    // Drawer components
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerContainer: LinearLayout
+    private lateinit var menuIcon: ImageView
 
     // Profile elements
     private lateinit var profileImage: ImageView
@@ -48,18 +60,33 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var navChats: LinearLayout
     private lateinit var navProfile: LinearLayout
 
+    // Drawer menu items
+    private lateinit var drawerLanguage: LinearLayout
+    private lateinit var drawerEditProfile: LinearLayout
+    private lateinit var drawerTheme: LinearLayout
+    private lateinit var drawerSignOut: LinearLayout
+    private lateinit var themeToggleText: TextView
+
     private var uid: String = ""
     private var userRole: String = ""
     private var currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     private var currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+
+        // Apply saved theme before setting content view
+        applySavedTheme()
 
         // Enable edge-to-edge and set status bar appearance
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).apply {
-            isAppearanceLightStatusBars = false
+            isAppearanceLightStatusBars = isDarkMode()
         }
 
         setContentView(R.layout.activity_profile)
@@ -85,6 +112,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         initializeViews()
+        setupDrawer()
         setupClickListeners()
         setupNavigation()
         loadUserProfile()
@@ -94,6 +122,11 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initializeViews() {
         try {
+            // Drawer components
+            drawerLayout = findViewById(R.id.drawerLayout)
+            drawerContainer = findViewById(R.id.drawerContainer)
+            menuIcon = findViewById(R.id.menuIcon)
+
             profileImage = findViewById(R.id.profileImage)
             profileName = findViewById(R.id.profileName)
             monthSelector = findViewById(R.id.monthSelector)
@@ -112,10 +145,54 @@ class ProfileActivity : AppCompatActivity() {
             navNotifications = findViewById(R.id.navNotifications)
             navChats = findViewById(R.id.navChats)
             navProfile = findViewById(R.id.navProfile)
+
+            // Drawer menu items
+            drawerLanguage = findViewById(R.id.drawerLanguage)
+            drawerEditProfile = findViewById(R.id.drawerEditProfile)
+            drawerTheme = findViewById(R.id.drawerTheme)
+            drawerSignOut = findViewById(R.id.drawerSignOut)
+            themeToggleText = findViewById(R.id.themeToggleText)
+
         } catch (e: Exception) {
             Log.e("ProfileActivity", "Error initializing views", e)
             showStyledToast("Error loading profile interface")
             finish()
+        }
+    }
+
+    private fun setupDrawer() {
+        // Update theme toggle text based on current theme
+        updateThemeToggleText()
+
+        // Menu icon click listener
+        menuIcon.setOnClickListener {
+            animateButtonPress(it)
+            if (drawerLayout.isDrawerOpen(drawerContainer)) {
+                drawerLayout.closeDrawer(drawerContainer)
+            } else {
+                drawerLayout.openDrawer(drawerContainer)
+            }
+        }
+
+        // Drawer menu item click listeners
+        drawerLanguage.setOnClickListener {
+            animateDrawerItem(it)
+            showLanguageDialog()
+        }
+
+        drawerEditProfile.setOnClickListener {
+            animateDrawerItem(it)
+            showEditProfileDialog()
+        }
+
+        drawerTheme.setOnClickListener {
+            animateDrawerItem(it)
+            toggleTheme()
+        }
+
+        drawerSignOut.setOnClickListener {
+            animateDrawerItem(it)
+            showSignOutDialog()
         }
     }
 
@@ -154,18 +231,177 @@ class ProfileActivity : AppCompatActivity() {
 
         navMap.setOnClickListener {
             animateNavItem(it)
-            showStyledToast("Map feature coming soon")
+            val intent = Intent(this, MapsActivity::class.java).apply {
+                putExtra("uid", uid)
+                putExtra("role", userRole)
+            }
+            startActivity(intent)
         }
 
         navNotifications.setOnClickListener {
             animateNavItem(it)
-            showStyledToast("Notifications feature coming soon")
+            val intent = Intent(this, NotificationActivity::class.java).apply {
+                putExtra("uid", uid)
+                putExtra("role", userRole)
+            }
+            startActivity(intent)
         }
 
         // Profile nav is current page, so just animate
         navProfile.setOnClickListener {
             animateNavItem(it)
         }
+    }
+
+    private fun showLanguageDialog() {
+        val languages = arrayOf("English", "العربية", "Français")
+        val currentLanguage = sharedPreferences.getString("language", "English")
+        var selectedIndex = languages.indexOf(currentLanguage)
+        if (selectedIndex == -1) selectedIndex = 0
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select Language")
+        builder.setSingleChoiceItems(languages, selectedIndex) { dialog, which ->
+            val selectedLanguage = languages[which]
+            sharedPreferences.edit().putString("language", selectedLanguage).apply()
+
+            // Apply language change
+            when (selectedLanguage) {
+                "العربية" -> setLocale("ar")
+                "Français" -> setLocale("fr")
+                else -> setLocale("en")
+            }
+
+            showStyledToast("Language changed to $selectedLanguage")
+            dialog.dismiss()
+            drawerLayout.closeDrawer(drawerContainer)
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+    }
+
+    private fun showEditProfileDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialogue_edit_profile, null)
+        val nameEditText = dialogView.findViewById<EditText>(R.id.editProfileName)
+        val emailEditText = dialogView.findViewById<EditText>(R.id.editProfileEmail)
+
+        // Pre-fill current name
+        nameEditText.setText(profileName.text.toString())
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Edit Profile")
+        builder.setView(dialogView)
+        builder.setPositiveButton("Save") { dialog, _ ->
+            val newName = nameEditText.text.toString().trim()
+            val newEmail = emailEditText.text.toString().trim()
+
+            if (newName.isNotEmpty()) {
+                updateUserProfile(newName, newEmail)
+            } else {
+                showStyledToast("Name cannot be empty")
+            }
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+        drawerLayout.closeDrawer(drawerContainer)
+    }
+
+    private fun toggleTheme() {
+        val isDark = isDarkMode()
+        val newMode = if (isDark) AppCompatDelegate.MODE_NIGHT_NO else AppCompatDelegate.MODE_NIGHT_YES
+
+        // Save theme preference
+        sharedPreferences.edit().putBoolean("dark_mode", !isDark).apply()
+
+        // Apply theme
+        AppCompatDelegate.setDefaultNightMode(newMode)
+
+        showStyledToast("Theme changed to ${if (!isDark) "Dark" else "Light"} mode")
+        drawerLayout.closeDrawer(drawerContainer)
+    }
+
+    private fun showSignOutDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Sign Out")
+        builder.setMessage("Are you sure you want to sign out?")
+        builder.setPositiveButton("Sign Out") { dialog, _ ->
+            signOut()
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.show()
+        drawerLayout.closeDrawer(drawerContainer)
+    }
+
+    private fun updateUserProfile(name: String, email: String) {
+        val updates = mutableMapOf<String, Any>()
+        updates["name"] = name
+        if (email.isNotEmpty()) {
+            updates["email"] = email
+        }
+
+        firestore.collection("users").document(uid)
+            .update(updates)
+            .addOnSuccessListener {
+                profileName.text = name
+                showStyledToast("Profile updated successfully")
+                Log.d("ProfileActivity", "Profile updated: $name")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("ProfileActivity", "Error updating profile", exception)
+                showStyledToast("Failed to update profile: ${exception.message}")
+            }
+    }
+
+    private fun signOut() {
+        try {
+            auth.signOut()
+
+            // Clear saved preferences
+            sharedPreferences.edit { clear() }
+
+            // Navigate to login/main activity
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivity(intent)
+            finish()
+        } catch (e: Exception) {
+            Log.e("ProfileActivity", "Error signing out", e)
+            showStyledToast("Error signing out")
+        }
+    }
+
+    private fun setLocale(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+    }
+
+    private fun applySavedTheme() {
+        val isDark = sharedPreferences.getBoolean("dark_mode", false)
+        val mode = if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
+    private fun isDarkMode(): Boolean {
+        return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            else -> false
+        }
+    }
+
+    private fun updateThemeToggleText() {
+        themeToggleText.text = if (isDarkMode()) "Switch to Light Mode" else "Switch to Dark Mode"
     }
 
     private fun loadUserProfile() {
@@ -399,7 +635,7 @@ class ProfileActivity : AppCompatActivity() {
             "July", "August", "September", "October", "November", "December"
         )
 
-        val builder = android.app.AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         builder.setTitle("Select Month")
         builder.setItems(months) { _, which ->
             currentMonth = which
@@ -451,6 +687,20 @@ class ProfileActivity : AppCompatActivity() {
         }, 150)
     }
 
+    private fun animateDrawerItem(view: View) {
+        ObjectAnimator.ofFloat(view, "alpha", 0.5f).apply {
+            duration = 100
+            start()
+        }
+
+        view.postDelayed({
+            ObjectAnimator.ofFloat(view, "alpha", 1.0f).apply {
+                duration = 100
+                start()
+            }
+        }, 100)
+    }
+
     private fun isConnected(): Boolean {
         return try {
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -465,5 +715,13 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun showStyledToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(drawerContainer)) {
+            drawerLayout.closeDrawer(drawerContainer)
+        } else {
+            super.onBackPressed()
+        }
     }
 }

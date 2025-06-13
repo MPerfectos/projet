@@ -52,13 +52,13 @@ class ChatsActivity : AppCompatActivity() {
 
         val navmap = findViewById<LinearLayout>(R.id.navMap)
         navmap.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
 
         val navnotification = findViewById<LinearLayout>(R.id.navNotifications)
         navnotification.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
         }
     }

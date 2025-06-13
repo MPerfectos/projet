@@ -26,7 +26,8 @@
     <dimen name="text_xxlarge">20sp</dimen>
     <dimen name="text_huge">24sp</dimen>
     <dimen name="text_massive">32sp</dimen>
-
+    <dimen name="notification_item_spacing">4dp</dimen>
+    <dimen name="avatar_size">48dp</dimen>
     <!-- Navigation -->
     <dimen name="nav_height">70dp</dimen>
     <dimen name="nav_corner_radius">16dp</dimen>

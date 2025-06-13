@@ -6,7 +6,10 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -17,14 +20,17 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="myapplication"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/ic_khadamat"
+        android:label="Khadamat"
+        android:roundIcon="@mipmap/ic_khadamat"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity
             android:name=".ViewProfileActivity"
             android:exported="false" />
+        <activity android:name=".MapsActivity"
+            android:exported="true"/>
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
@@ -67,6 +73,8 @@
         <activity
             android:name=".RequestDetailsActivity"
             android:exported="false" />
+        <activity android:name=".NotificationActivity"
+            android:exported="false"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

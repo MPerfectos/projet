@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -40,15 +39,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navProfile: LinearLayout
 
     private var currentPage = 0
-    private val itemsPerPage = 5
+    private val itemsPerPage = 10
     private var allRequests = listOf<JobRequest>()
     private var filteredRequests = listOf<JobRequest>()
+    private var displayedRequests = mutableListOf<JobRequest>()
     private var isLoadingPage = false
+    private var hasMoreData = true
+
+    private var adapter: JobRequestAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Enable edge-to-edge and set status bar appearance
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
 
         initializeViews()
-        setupAnimations()
+        setupOptimizedAnimations()
 
         if (!isConnected()) {
             showStyledToast("No internet connection available")
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         checkUserRole()
         setupClickListeners()
         setupSearchFunctionality()
-        setupScrollListener()
+        setupOptimizedScrollListener()
         setupNavigation()
     }
 
@@ -87,33 +89,32 @@ class MainActivity : AppCompatActivity() {
         navProfile = findViewById(R.id.navProfile)
     }
 
-    private fun setupAnimations() {
-        // Animate search bar on focus
+    private fun setupOptimizedAnimations() {
         searchBar.setOnFocusChangeListener { _, hasFocus ->
-            val scaleX = if (hasFocus) 1.02f else 1.0f
-            val scaleY = if (hasFocus) 1.02f else 1.0f
-
-            ObjectAnimator.ofFloat(searchBar.parent as View, "scaleX", scaleX).apply {
-                duration = 200
-                start()
-            }
-            ObjectAnimator.ofFloat(searchBar.parent as View, "scaleY", scaleY).apply {
-                duration = 200
-                start()
+            val scale = if (hasFocus) 1.01f else 1.0f
+            searchBar.parent.let { parent ->
+                ObjectAnimator.ofFloat(parent as View, "scaleX", scale).apply {
+                    duration = 150
+                    start()
+                }
+                ObjectAnimator.ofFloat(parent, "scaleY", scale).apply {
+                    duration = 150
+                    start()
+                }
             }
         }
     }
 
     private fun setupClickListeners() {
         btnCreateRequest.setOnClickListener {
-            animateButtonPress(it)
+            animateButtonPressOptimized(it)
             val intent = Intent(this, CreateRequestActivity::class.java)
             intent.putExtra("uid", auth.currentUser?.uid)
             startActivity(intent)
         }
 
         btnViewMyRequests.setOnClickListener {
-            animateButtonPress(it)
+            animateButtonPressOptimized(it)
             val intent = Intent(this, MyRequestsActivity::class.java)
             intent.putExtra("uid", auth.currentUser?.uid)
             startActivity(intent)
@@ -134,21 +135,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupScrollListener() {
-        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
-            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {}
+    private fun setupOptimizedScrollListener() {
+        listView.setOnScrollListener(object : android.widget.AbsListView.OnScrollListener {
+            override fun onScrollStateChanged(view: android.widget.AbsListView?, scrollState: Int) {}
 
             override fun onScroll(
-                view: AbsListView?,
+                view: android.widget.AbsListView?,
                 firstVisibleItem: Int,
                 visibleItemCount: Int,
                 totalItemCount: Int
             ) {
-                if (!isLoadingPage && (firstVisibleItem + visibleItemCount >= totalItemCount)
-                    && totalItemCount > 0 && totalItemCount < filteredRequests.size
-                ) {
-                    currentPage++
-                    updateListView()
+                val threshold = 5
+                if (!isLoadingPage && hasMoreData &&
+                    (firstVisibleItem + visibleItemCount + threshold >= totalItemCount) &&
+                    totalItemCount > 0) {
+                    loadMoreItems()
                 }
             }
         })
@@ -156,60 +157,55 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         navChats.setOnClickListener {
-            animateNavItem(it)
+            animateNavItemOptimized(it)
             navigateWithUserData(ChatsActivity::class.java)
         }
-
         navProfile.setOnClickListener {
-            animateNavItem(it)
+            animateNavItemOptimized(it)
             navigateWithUserData(ProfileActivity::class.java)
         }
-
         navMap.setOnClickListener {
-            animateNavItem(it)
-            navigateWithUserData(ProfileActivity::class.java) // Replace with actual Map activity
+            animateNavItemOptimized(it)
+            navigateWithUserData(MapsActivity::class.java)
         }
-
         navNotifications.setOnClickListener {
-            animateNavItem(it)
-            navigateWithUserData(ProfileActivity::class.java) // Replace with actual Notifications activity
+            animateNavItemOptimized(it)
+            navigateWithUserData(NotificationActivity::class.java)
         }
     }
 
-    private fun animateButtonPress(view: View) {
-        ObjectAnimator.ofFloat(view, "scaleX", 0.95f).apply {
-            duration = 100
-            start()
+    private fun animateButtonPressOptimized(view: View) {
+        val scaleXDown = ObjectAnimator.ofFloat(view, "scaleX", 0.97f).apply {
+            duration = 75
         }
-        ObjectAnimator.ofFloat(view, "scaleY", 0.95f).apply {
-            duration = 100
-            start()
+        val scaleYDown = ObjectAnimator.ofFloat(view, "scaleY", 0.97f).apply {
+            duration = 75
         }
+        val scaleXUp = ObjectAnimator.ofFloat(view, "scaleX", 1.0f).apply {
+            duration = 75
+            startDelay = 75
+        }
+        val scaleYUp = ObjectAnimator.ofFloat(view, "scaleY", 1.0f).apply {
+            duration = 75
+            startDelay = 75
+        }
+        scaleXDown.start()
+        scaleYDown.start()
+        scaleXUp.start()
+        scaleYUp.start()
+    }
 
+    private fun animateNavItemOptimized(view: View) {
+        ObjectAnimator.ofFloat(view, "alpha", 0.8f).apply {
+            duration = 100
+            start()
+        }
         view.postDelayed({
-            ObjectAnimator.ofFloat(view, "scaleX", 1.0f).apply {
-                duration = 100
-                start()
-            }
-            ObjectAnimator.ofFloat(view, "scaleY", 1.0f).apply {
+            ObjectAnimator.ofFloat(view, "alpha", 1.0f).apply {
                 duration = 100
                 start()
             }
         }, 100)
-    }
-
-    private fun animateNavItem(view: View) {
-        ObjectAnimator.ofFloat(view, "alpha", 0.7f).apply {
-            duration = 150
-            start()
-        }
-
-        view.postDelayed({
-            ObjectAnimator.ofFloat(view, "alpha", 1.0f).apply {
-                duration = 150
-                start()
-            }
-        }, 150)
     }
 
     private fun navigateWithUserData(destinationClass: Class<*>) {
@@ -245,7 +241,6 @@ class MainActivity : AppCompatActivity() {
             showStyledToast("User not logged in")
             return
         }
-
         firestore.collection("users").document(uid).get()
             .addOnSuccessListener { document ->
                 val role = document.getString("role")
@@ -277,8 +272,8 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 filteredRequests = allRequests
-                currentPage = 0
-                updateListView()
+                resetPagination()
+                loadInitialItems()
             }
             .addOnFailureListener {
                 showStyledToast("Failed to load requests")
@@ -297,36 +292,58 @@ class MainActivity : AppCompatActivity() {
                         item.salary.lowercase().contains(lowerQuery)
             }
         }
-        currentPage = 0
-        updateListView()
+        resetPagination()
+        loadInitialItems()
     }
 
-    private fun updateListView() {
+    private fun resetPagination() {
+        currentPage = 0
+        displayedRequests.clear()
+        hasMoreData = true
+        adapter = null
+    }
+
+    private fun loadInitialItems() {
+        loadMoreItems()
+    }
+
+    private fun loadMoreItems() {
+        if (isLoadingPage || !hasMoreData) return
+
         isLoadingPage = true
 
         val fromIndex = currentPage * itemsPerPage
         val toIndex = minOf(fromIndex + itemsPerPage, filteredRequests.size)
 
         if (fromIndex >= filteredRequests.size) {
+            hasMoreData = false
             isLoadingPage = false
             return
         }
 
-        val sublist = filteredRequests.subList(0, toIndex)
+        val newItems = filteredRequests.subList(fromIndex, toIndex)
+        displayedRequests.addAll(newItems)
+        hasMoreData = toIndex < filteredRequests.size
 
-        val adapter = JobRequestAdapter(this, sublist)
-        listView.adapter = adapter
-
-        listView.setOnItemClickListener { _, _, position, _ ->
-            val selected = sublist[position]
-            val intent = Intent(this, RequestDetailsActivity::class.java).apply {
-                putExtra("currentUid", auth.currentUser?.uid)
-                putExtra("creatorUid", selected.createdByUid)
-                putExtra("requestId", selected.requestId)
+        if (adapter == null) {
+            adapter = JobRequestAdapter(this, displayedRequests)
+            listView.adapter = adapter
+            listView.setOnItemClickListener { _, _, position, _ ->
+                if (position < displayedRequests.size) {
+                    val selected = displayedRequests[position]
+                    val intent = Intent(this, RequestDetailsActivity::class.java).apply {
+                        putExtra("currentUid", auth.currentUser?.uid)
+                        putExtra("creatorUid", selected.createdByUid)
+                        putExtra("requestId", selected.requestId)
+                    }
+                    startActivity(intent)
+                }
             }
-            startActivity(intent)
+        } else {
+            adapter?.notifyDataSetChanged()
         }
 
+        currentPage++
         isLoadingPage = false
     }
 
