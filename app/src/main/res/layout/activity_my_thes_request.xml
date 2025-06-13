@@ -1,10 +1,116 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyThesRequestActivity">
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="My Request"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etJobName"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="Jop Name" />
+
+        <EditText
+            android:id="@+id/etJobType"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:enabled="false"
+            android:hint="Type" />
+
+        <EditText
+            android:id="@+id/etPrice"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:enabled="false"
+            android:hint="Salary" />
+
+        <EditText
+            android:id="@+id/etHours"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:enabled="false"
+            android:hint="HOurs" />
+
+        <EditText
+            android:id="@+id/etLocation"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:enabled="false"
+            android:hint="Loction" />
+
+        <EditText
+            android:id="@+id/etSkill"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="skills" />
+
+        <EditText
+            android:id="@+id/etExperience"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:enabled="false"
+            android:hint="exp" />
+
+        <EditText
+            android:id="@+id/etStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:enabled="false"
+            android:hint=" Time Start" />
+
+
+        <!-- زر الحذف -->
+        <Button
+            android:id="@+id/btnDeleteRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text=" Delete request" />
+
+        <!-- عنوان -->
+        <TextView
+            android:id="@+id/tvJobDetails"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- قائمة المتقدمين -->
+        <TextView
+            android:id="@+id/tvNoApplicants"
+            android:text="No One"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textColor="#888888"
+            android:layout_marginTop="10dp" />
+
+        <ListView
+            android:id="@+id/listViewApplicants"
+            android:layout_width="match_parent"
+            android:layout_height="247dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:scrollbars="none" />
+
+
+    </LinearLayout>
+</ScrollView>

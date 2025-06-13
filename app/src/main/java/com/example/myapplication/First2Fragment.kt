@@ -13,6 +13,7 @@ import com.example.myapplication.databinding.FragmentFirst2Binding
  */
 class First2Fragment : Fragment() {
 
+
     private var _binding: FragmentFirst2Binding? = null
 
     // This property is only valid between onCreateView and

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#2196F3"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+    <!-- بإمكانك إضافة صورة بروفايل هنا، إن احتجت لاحقاً -->
+    <ImageView
+        android:id="@+id/imgProfileHeader"
+        android:src="@drawable/img"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="Profile Picture"
+        />
+
+    <TextView
+        android:id="@+id/tvHeaderName"
+        android:text="Yalla Job "
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

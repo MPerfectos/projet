@@ -76,7 +76,7 @@ class EmployerSignUpActivity : AppCompatActivity() {
                                 Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                             }
                     } else {
-                        Toast.makeText(this, "Sign up failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, " Sign up failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
 

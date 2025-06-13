@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- اسم المستخدم -->
+        <TextView
+            android:id="@+id/tvUserName1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:layout_marginBottom="16dp"
+            android:textSize="20sp"
+            android:padding="20dp"
+            android:textStyle="bold"/>
+
+        <!-- الشركة -->
+        <TextView
+            android:id="@+id/tvCompany1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Company Name"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- البريد الإلكتروني -->
+        <TextView
+            android:id="@+id/tvEmail1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Emaile"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- رقم الهاتف -->
+        <TextView
+            android:id="@+id/tvPhone1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- العمر -->
+        <TextView
+            android:id="@+id/tvAge1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Age"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- الموقع -->
+        <TextView
+            android:id="@+id/tvLocation1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loction"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- الوصف -->
+        <TextView
+            android:id="@+id/tvDescription1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="20sp"
+            android:padding="8dp" />
+
+        <!-- زر المراسلة -->
+        <Button
+            android:id="@+id/btnMessage1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" Correspondence"
+            android:layout_marginTop="24dp" />
+
+    </LinearLayout>
+</ScrollView>

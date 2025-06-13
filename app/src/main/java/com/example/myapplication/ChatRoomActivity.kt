@@ -55,7 +55,7 @@ class ChatRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
 
-        // 1. قراءة chatId و userId من الـ Intent
+
         chatId = intent.getStringExtra("chatId").orEmpty()
         currentUserId = intent.getStringExtra("userId").orEmpty()
 

@@ -22,4 +22,5 @@ class ChooseRoleActivity : AppCompatActivity() {
             startActivity(Intent(this, EmployerSignUpActivity::class.java))
         }
     }
+
 }

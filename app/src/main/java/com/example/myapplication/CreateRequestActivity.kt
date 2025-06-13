@@ -77,7 +77,7 @@ class CreateRequestActivity : AppCompatActivity() {
             }
         }
 
-        // جلب اسم المستخدم
+
         db.collection("users").document(uid).get().addOnSuccessListener { doc ->
             userName = doc.getString("name") ?: ""
         }

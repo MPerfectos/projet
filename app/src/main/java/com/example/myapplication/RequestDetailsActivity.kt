@@ -24,7 +24,7 @@ class RequestDetailsActivity : AppCompatActivity() {
 
     private lateinit var btnLocation: Button
     private lateinit var btnApply: Button
-    private lateinit var btnViewProfile: Button  // ✅ إضافة مرجع الزر الجديد
+    private lateinit var btnViewProfile: Button
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -49,23 +49,30 @@ class RequestDetailsActivity : AppCompatActivity() {
 
         btnLocation    = findViewById(R.id.btnLocation)
         btnApply       = findViewById(R.id.btnApply)
-        btnViewProfile = findViewById(R.id.btnViewProfile)  // ✅ ربط الزر الجديد
+        btnViewProfile = findViewById(R.id.btnViewProfile)
 
         currentUid = intent.getStringExtra("currentUid") ?: ""
         creatorUid = intent.getStringExtra("creatorUid") ?: ""
         requestId  = intent.getStringExtra("requestId") ?: ""
 
+
+
+        if (currentUid == creatorUid) {
+            btnViewProfile.visibility = View.GONE
+        }
+
         loadRequestData()
         checkRoleAndSetupButton()
 
-        // ✅ تنفيذ زر "عرض البروفايل"
         btnViewProfile.setOnClickListener {
-            val intent = Intent(this, ViewProfileActivity::class.java)
+            val intent = Intent(this, UserDetailsActivity::class.java)
             intent.putExtra("currentUserId", currentUid)
-            intent.putExtra("otherUserId", creatorUid)
+            intent.putExtra("userId", creatorUid)  // هنا المفتاح يجب أن يتطابق مع ما يستخدمه UserDetailsActivity
             startActivity(intent)
         }
+
     }
+
 
     private fun loadRequestData() {
         db.collection("requests").document(requestId).get()
@@ -119,6 +126,15 @@ class RequestDetailsActivity : AppCompatActivity() {
                 )
                 appRef.set(appData)
 
+                // ✅ إشعار التقدم
+                val notificationApply = hashMapOf(
+                    "fromId" to currentUid,
+                    "toId" to creatorUid,
+                    "message" to "applied for",
+                    "timestamp" to System.currentTimeMillis()
+                )
+                db.collection("notifications").add(notificationApply)
+
                 val chatId = if (currentUid < creatorUid)
                     "${currentUid}_$creatorUid" else "${creatorUid}_$currentUid"
 
@@ -130,6 +146,15 @@ class RequestDetailsActivity : AppCompatActivity() {
                             "user2" to creatorUid
                         )
                         chatRef.set(chatData)
+
+
+                        val notificationChat = hashMapOf(
+                            "fromId" to currentUid,
+                            "toId" to creatorUid,
+                            "message" to "conversation started ",
+                            "timestamp" to System.currentTimeMillis()
+                        )
+                        db.collection("notifications").add(notificationChat)
                     }
                 }
 
