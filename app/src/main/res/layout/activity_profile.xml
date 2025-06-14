@@ -57,8 +57,8 @@
                     <!-- Profile Image -->
                     <ImageView
                         android:id="@+id/profileImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/circle_background"
@@ -530,14 +530,14 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_profile"
-                    app:tint="#007AFF" />
+                    app:tint="#00FFCC" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Profile"
-                    android:textColor="#007AFF"
+                    android:textColor="#00EAFF"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -562,13 +562,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="12dp"
+                    app:tint="#000000"
+                    android:src="@drawable/ic_profile"
+                    android:layout_alignParentLeft="true"/>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/roundedImage"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@mipmap/khadamat"
+                    app:shapeAppearanceOverlay="@style/RoundedImageStyle"
+                    android:layout_alignParentRight="true"
+                    android:scaleType="centerCrop"/>
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/circle_background"
-                android:src="@drawable/ic_profile" />
 
             <TextView
                 android:layout_width="wrap_content"

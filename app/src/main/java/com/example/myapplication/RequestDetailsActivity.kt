@@ -55,8 +55,6 @@ class RequestDetailsActivity : AppCompatActivity() {
         creatorUid = intent.getStringExtra("creatorUid") ?: ""
         requestId  = intent.getStringExtra("requestId") ?: ""
 
-
-
         if (currentUid == creatorUid) {
             btnViewProfile.visibility = View.GONE
         }
@@ -70,9 +68,7 @@ class RequestDetailsActivity : AppCompatActivity() {
             intent.putExtra("userId", creatorUid)  // هنا المفتاح يجب أن يتطابق مع ما يستخدمه UserDetailsActivity
             startActivity(intent)
         }
-
     }
-
 
     private fun loadRequestData() {
         db.collection("requests").document(requestId).get()
@@ -88,12 +84,21 @@ class RequestDetailsActivity : AppCompatActivity() {
                 tvExperience.text = "Experience: ${doc.getString("experience")}"
 
                 val geo: GeoPoint? = doc.getGeoPoint("locationGeo")
+                val locationName = doc.getString("location") ?: "Work Location"
+
                 btnLocation.setOnClickListener {
                     if (geo != null) {
-                        val uri = Uri.parse("geo:${geo.latitude},${geo.longitude}?q=${geo.latitude},${geo.longitude}")
-                        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-                        mapIntent.setPackage("com.google.android.apps.maps")
-                        startActivity(mapIntent)
+                        // Open MapsActivity with location coordinates
+                        val intent = Intent(this, MapsActivity::class.java)
+                        intent.putExtra("latitude", geo.latitude)
+                        intent.putExtra("longitude", geo.longitude)
+                        intent.putExtra("locationName", locationName)
+                        intent.putExtra("showSpecificLocation", true)
+                        // Pass request details for potential navigation back
+                        intent.putExtra("requestId", requestId)
+                        intent.putExtra("creatorUid", creatorUid)
+                        intent.putExtra("currentUid", currentUid)
+                        startActivity(intent)
                     } else {
                         Toast.makeText(this, "لا توجد إحداثيات للموقع", Toast.LENGTH_SHORT).show()
                     }
@@ -146,7 +151,6 @@ class RequestDetailsActivity : AppCompatActivity() {
                             "user2" to creatorUid
                         )
                         chatRef.set(chatData)
-
 
                         val notificationChat = hashMapOf(
                             "fromId" to currentUid,

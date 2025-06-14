@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -23,7 +24,7 @@ class CreateRequestActivity : AppCompatActivity() {
     private lateinit var uid: String
     private var userName: String = ""
 
-    // 🔹 متغيرات جديدة خاصة بالموقع
+    // متغيرات خاصة بالموقع
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var locationGeoPoint: GeoPoint? = null
 
@@ -53,7 +54,10 @@ class CreateRequestActivity : AppCompatActivity() {
         val btnSave = findViewById<Button>(R.id.btnSaveRequest)
         val btnGetCurrentLocation = findViewById<Button>(R.id.btnGetCurrentLocation)
 
-        // 🔹 زر "موقعك حالياً"
+        // زر جديد لعرض الموقع على الخريطة
+        val btnViewOnMap = findViewById<Button>(R.id.btnViewOnMap)
+
+        // زر "موقعك حالياً"
         btnGetCurrentLocation.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1001)
@@ -77,6 +81,42 @@ class CreateRequestActivity : AppCompatActivity() {
             }
         }
 
+        // زر عرض على الخريطة
+        btnViewOnMap.setOnClickListener {
+            val location = editLocation.text.toString().trim()
+            if (location.isEmpty()) {
+                Toast.makeText(this, "يرجى إدخال الموقع أولاً", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // محاولة تحويل النص إلى إحداثيات إذا لم تكن محددة مسبقاً
+            if (locationGeoPoint == null) {
+                try {
+                    val geocoder = Geocoder(this, Locale.getDefault())
+                    val addressList = geocoder.getFromLocationName(location, 1)
+                    if (!addressList.isNullOrEmpty()) {
+                        val address = addressList[0]
+                        locationGeoPoint = GeoPoint(address.latitude, address.longitude)
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this, "تعذر تحديد إحداثيات الموقع", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+
+            // فتح الخريطة مع الموقع المحدد
+            locationGeoPoint?.let { geoPoint ->
+                val intent = Intent(this, MapsActivity::class.java)
+                intent.putExtra("latitude", geoPoint.latitude)
+                intent.putExtra("longitude", geoPoint.longitude)
+                intent.putExtra("locationName", location)
+                intent.putExtra("showSpecificLocation", true)
+                intent.putExtra("jobName", editJobName.text.toString())
+                intent.putExtra("price", editPrice.text.toString())
+                intent.putExtra("userName", userName)
+                startActivity(intent)
+            }
+        }
 
         db.collection("users").document(uid).get().addOnSuccessListener { doc ->
             userName = doc.getString("name") ?: ""
@@ -108,7 +148,7 @@ class CreateRequestActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // 🔹 في حال لم يتم تحديد locationGeoPoint مسبقًا، يتم محاولة تحويل النص إلى إحداثيات
+            // في حال لم يتم تحديد locationGeoPoint مسبقًا، يتم محاولة تحويل النص إلى إحداثيات
             if (locationGeoPoint == null) {
                 try {
                     val geocoder = Geocoder(this, Locale.getDefault())
@@ -130,7 +170,7 @@ class CreateRequestActivity : AppCompatActivity() {
                 "jobName" to jobName,
                 "price" to price,
                 "location" to location,
-                "locationGeo" to locationGeoPoint,  // 🔹 تم تخزين الإحداثيات هنا
+                "locationGeo" to locationGeoPoint,
                 "hours" to editHours.text.toString().trim(),
                 "skill" to editSkill.text.toString().trim(),
                 "experience" to editExperience.text.toString().trim(),
@@ -138,12 +178,34 @@ class CreateRequestActivity : AppCompatActivity() {
                 "startTime" to textStartTime.text.toString(),
                 "uid" to uid,
                 "userName" to userName,
-                "createdAt" to Timestamp.now()
+                "createdAt" to Timestamp.now(),
+                "isActive" to true // إضافة حقل لتتبع الطلبات النشطة
             )
 
             db.collection("requests").add(requestData)
-                .addOnSuccessListener {
+                .addOnSuccessListener { documentReference ->
+                    // إضافة معرف الوثيقة إلى البيانات
+                    documentReference.update("requestId", documentReference.id)
+
                     Toast.makeText(this, "تم حفظ الطلب بنجاح", Toast.LENGTH_SHORT).show()
+
+                    // فتح الخريطة لعرض الطلب المحفوظ حديثاً
+                    locationGeoPoint?.let { geoPoint ->
+                        val intent = Intent(this, MapsActivity::class.java)
+                        intent.putExtra("latitude", geoPoint.latitude)
+                        intent.putExtra("longitude", geoPoint.longitude)
+                        intent.putExtra("locationName", location)
+                        intent.putExtra("showSpecificLocation", true)
+                        intent.putExtra("jobName", jobName)
+                        intent.putExtra("price", price)
+                        intent.putExtra("userName", userName)
+                        intent.putExtra("requestId", documentReference.id)
+                        intent.putExtra("creatorUid", uid)
+                        intent.putExtra("currentUid", uid)
+                        intent.putExtra("showJobCreated", true)
+                        startActivity(intent)
+                    }
+
                     finish()
                 }
                 .addOnFailureListener {

@@ -275,6 +275,17 @@
                         android:textStyle="bold"
                         android:backgroundTint="#00cc00"
                         app:cornerRadius="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewOnMap"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="Show"
+                        android:textColor="#000000"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="#00cc00"
+                        app:cornerRadius="8dp" />
+
 
                 </LinearLayout>
 
