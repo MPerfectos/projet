@@ -59,7 +59,7 @@
             android:id="@+id/LocastionEditText"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:hint="Company Locastion" />
+            android:hint="Company Location" />
         <EditText
             android:id="@+id/DescriptionEditText"
             android:layout_width="match_parent"
