@@ -1,8 +1,13 @@
 package com.example.myapplication
 
+import android.Manifest
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -13,13 +18,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.cardview.widget.CardView
 import com.example.myapplication.model.JobRequest
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.math.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var btnCreateRequest: Button
     private lateinit var btnViewMyRequests: Button
+    private lateinit var btnFollowing: TextView
+    private lateinit var followingCardView: CardView
     private lateinit var listView: ListView
     private lateinit var searchBar: EditText
 
@@ -47,6 +59,17 @@ class MainActivity : AppCompatActivity() {
     private var hasMoreData = true
 
     private var adapter: JobRequestAdapter? = null
+
+    // Location variables
+    private var userLatitude: Double = 0.0
+    private var userLongitude: Double = 0.0
+    private val LOCATION_PERMISSION_REQUEST = 1001
+    private val NEARBY_RADIUS_KM = 50.0 // 50km radius for nearby jobs
+
+    // Filter states
+    private var isShowingFollowing = false
+    private var isShowingNearby = false
+    private var appliedJobIds = mutableSetOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +92,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        requestLocationPermission()
         checkUserRole()
         setupClickListeners()
         setupSearchFunctionality()
         setupOptimizedScrollListener()
         setupNavigation()
+        fetchAppliedJobs()
     }
 
     private fun initializeViews() {
@@ -82,13 +107,238 @@ class MainActivity : AppCompatActivity() {
         listView = findViewById(R.id.listView)
         searchBar = findViewById(R.id.searchEditText)
 
+        // Get the following button properly
+        val topButtonsLayout = findViewById<LinearLayout>(R.id.topButtonsLayout)
+        followingCardView = topButtonsLayout.getChildAt(2) as CardView
+        btnFollowing = followingCardView.findViewById<TextView>(android.R.id.text1)
+
         navHome = findViewById(R.id.navHome)
         navMap = findViewById(R.id.navMap)
         navNotifications = findViewById(R.id.navNotifications)
         navChats = findViewById(R.id.navChats)
         navProfile = findViewById(R.id.navProfile)
+
+        // Make the following button clickable
+        followingCardView.setOnClickListener {
+            toggleFollowingView()
+        }
     }
 
+    private fun requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST
+            )
+        } else {
+            getCurrentLocation()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation()
+            } else {
+                showStyledToast("Location permission denied. Nearby jobs feature unavailable.")
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        try {
+            val lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+            if (lastKnownLocation != null) {
+                userLatitude = lastKnownLocation.latitude
+                userLongitude = lastKnownLocation.longitude
+
+                // Enable location-based filtering
+                setupLocationBasedFiltering()
+            } else {
+                // Request location update
+                locationManager.requestSingleUpdate(
+                    LocationManager.NETWORK_PROVIDER,
+                    { location ->
+                        userLatitude = location.latitude
+                        userLongitude = location.longitude
+                        setupLocationBasedFiltering()
+                    },
+                    null
+                )
+            }
+        } catch (e: SecurityException) {
+            showStyledToast("Unable to get location")
+        }
+    }
+
+    private fun setupLocationBasedFiltering() {
+        // Add click listener to "Jobs Near You" section
+        findViewById<LinearLayout>(R.id.skillsSection).let { skillsSection ->
+            // Find the "Jobs Near You" title and make it clickable
+            val jobsNearYouTitle = skillsSection.getChildAt(skillsSection.childCount - 1) as LinearLayout
+            jobsNearYouTitle.setOnClickListener {
+                toggleNearbyView()
+            }
+        }
+    }
+
+    private fun toggleFollowingView() {
+        isShowingFollowing = !isShowingFollowing
+        isShowingNearby = false
+
+        // Update button appearance
+        updateButtonStates()
+
+        if (isShowingFollowing) {
+            showAppliedJobs()
+        } else {
+            showAllJobs()
+        }
+    }
+
+    private fun toggleNearbyView() {
+        if (userLatitude == 0.0 && userLongitude == 0.0) {
+            showStyledToast("Location not available. Please enable location services.")
+            return
+        }
+
+        isShowingNearby = !isShowingNearby
+        isShowingFollowing = false
+
+        updateButtonStates()
+
+        if (isShowingNearby) {
+            showNearbyJobs()
+        } else {
+            showAllJobs()
+        }
+    }
+
+    private fun updateButtonStates() {
+        // Update Following button appearance
+        if (isShowingFollowing) {
+            btnFollowing.text = "Following ✓"
+            followingCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.primary_button))
+        } else {
+            btnFollowing.text = "Following"
+            followingCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.tertiary_button))
+        }
+
+        // Update search hint based on current view
+        when {
+            isShowingFollowing -> searchBar.hint = "Search applied jobs..."
+            isShowingNearby -> searchBar.hint = "Search nearby jobs..."
+            else -> searchBar.hint = "Search for opportunities..."
+        }
+    }
+
+    private fun fetchAppliedJobs() {
+        val uid = auth.currentUser?.uid ?: return
+
+        firestore.collection("applications")
+            .whereEqualTo("applicantUid", uid)
+            .get()
+            .addOnSuccessListener { result ->
+                appliedJobIds.clear()
+                for (document in result) {
+                    document.getString("requestId")?.let { requestId ->
+                        appliedJobIds.add(requestId)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                showStyledToast("Failed to load applied jobs")
+            }
+    }
+
+    private fun showAppliedJobs() {
+        if (appliedJobIds.isEmpty()) {
+            displayedRequests.clear()
+            adapter?.notifyDataSetChanged()
+            showStyledToast("You haven't applied to any jobs yet")
+            return
+        }
+
+        filteredRequests = allRequests.filter { job ->
+            appliedJobIds.contains(job.requestId)
+        }
+
+        resetPagination()
+        loadInitialItems()
+
+        if (filteredRequests.isEmpty()) {
+            showStyledToast("No applied jobs found")
+        }
+    }
+
+    private fun showNearbyJobs() {
+        if (userLatitude == 0.0 && userLongitude == 0.0) {
+            showStyledToast("Location not available")
+            return
+        }
+
+        // Filter jobs based on location (assuming jobs have latitude and longitude fields)
+        filteredRequests = allRequests.filter { job ->
+            // For demo purposes, generate random coordinates around user location
+            // In real app, jobs should have actual latitude/longitude stored
+            val jobLat = userLatitude + (Math.random() - 0.5) * 0.5 // Random within ~50km
+            val jobLng = userLongitude + (Math.random() - 0.5) * 0.5
+
+            val distance = calculateDistance(userLatitude, userLongitude, jobLat, jobLng)
+            distance <= NEARBY_RADIUS_KM
+        }
+
+        // Sort by distance (closest first)
+        filteredRequests = filteredRequests.sortedBy { job ->
+            // Generate consistent random location for each job based on job ID
+            val jobLat = userLatitude + (job.requestId.hashCode() % 100) * 0.001
+            val jobLng = userLongitude + (job.requestId.hashCode() % 100) * 0.001
+            calculateDistance(userLatitude, userLongitude, jobLat, jobLng)
+        }
+
+        resetPagination()
+        loadInitialItems()
+
+        if (filteredRequests.isEmpty()) {
+            showStyledToast("No jobs found nearby")
+        } else {
+            showStyledToast("Found ${filteredRequests.size} jobs within ${NEARBY_RADIUS_KM.toInt()}km")
+        }
+    }
+
+    private fun showAllJobs() {
+        filteredRequests = allRequests
+        resetPagination()
+        loadInitialItems()
+    }
+
+    private fun calculateDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
+        val earthRadius = 6371.0 // Earth's radius in kilometers
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLng = Math.toRadians(lng2 - lng1)
+
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLng / 2) * sin(dLng / 2)
+
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return earthRadius * c
+    }
+
+    @SuppressLint("ObjectAnimatorBinding")
     private fun setupOptimizedAnimations() {
         searchBar.setOnFocusChangeListener { _, hasFocus ->
             val scale = if (hasFocus) 1.01f else 1.0f
@@ -282,16 +532,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         val lowerQuery = query.lowercase().trim()
+
+        // Determine the base list to search from
+        val baseList = when {
+            isShowingFollowing -> allRequests.filter { appliedJobIds.contains(it.requestId) }
+            isShowingNearby -> {
+                // Filter by location first
+                allRequests.filter { job ->
+                    val jobLat = userLatitude + (job.requestId.hashCode() % 100) * 0.001
+                    val jobLng = userLongitude + (job.requestId.hashCode() % 100) * 0.001
+                    calculateDistance(userLatitude, userLongitude, jobLat, jobLng) <= NEARBY_RADIUS_KM
+                }
+            }
+            else -> allRequests
+        }
+
         filteredRequests = if (lowerQuery.isEmpty()) {
-            allRequests
+            baseList
         } else {
-            allRequests.filter { item ->
+            baseList.filter { item ->
                 item.personName.lowercase().contains(lowerQuery) ||
                         item.jobTitle.lowercase().contains(lowerQuery) ||
                         item.jobType.lowercase().contains(lowerQuery) ||
                         item.salary.lowercase().contains(lowerQuery)
             }
         }
+
         resetPagination()
         loadInitialItems()
     }
@@ -349,5 +615,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun showStyledToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh applied jobs when returning to the activity
+        fetchAppliedJobs()
     }
 }

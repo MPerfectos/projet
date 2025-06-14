@@ -26,9 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        <activity
-            android:name=".ViewProfileActivity"
-            android:exported="false" />
         <activity android:name=".MapsActivity"
             android:exported="true"/>
         <activity

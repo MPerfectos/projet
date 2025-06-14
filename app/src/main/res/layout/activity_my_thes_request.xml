@@ -1,116 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#121212"
+    android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-        <TextView
+        <!-- Header Section -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="My Request"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1E1E1E"
+            android:elevation="4dp"
+            app:cardCornerRadius="12dp">
 
-        <EditText
-            android:id="@+id/etJobName"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:enabled="false"
-            android:hint="Jop Name" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-        <EditText
-            android:id="@+id/etJobType"
-            android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:enabled="false"
-            android:hint="Type" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="My Request"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/etPrice"
-            android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:enabled="false"
-            android:hint="Salary" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        <EditText
-            android:id="@+id/etHours"
-            android:layout_width="match_parent"
-            android:layout_height="59dp"
-            android:enabled="false"
-            android:hint="HOurs" />
-
-        <EditText
-            android:id="@+id/etLocation"
-            android:layout_width="match_parent"
-            android:layout_height="59dp"
-            android:enabled="false"
-            android:hint="Loction" />
-
-        <EditText
-            android:id="@+id/etSkill"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:enabled="false"
-            android:hint="skills" />
-
-        <EditText
-            android:id="@+id/etExperience"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:enabled="false"
-            android:hint="exp" />
-
-        <EditText
-            android:id="@+id/etStartTime"
-            android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:enabled="false"
-            android:hint=" Time Start" />
-
-
-        <!-- زر الحذف -->
-        <Button
-            android:id="@+id/btnDeleteRequest"
+        <!-- Job Details Section -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text=" Delete request" />
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1E1E1E"
+            android:elevation="4dp"
+            app:cardCornerRadius="12dp">
 
-        <!-- عنوان -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="JOB DETAILS"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/etJobName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp"
+                    android:text="Job Name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:drawablePadding="8dp" />
+
+                <TextView
+                    android:id="@+id/etJobType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp"
+                    android:text="Job Type"
+                    android:textColor="#CCCCCC"
+                    android:textSize="14sp"
+                    android:drawablePadding="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Experience needed"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/etExperience"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Experience"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Required Skill"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/etSkill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Skills"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Start Time"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/etStartTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start Time"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:background="#2A2A2A"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Working Hours"
+                        android:textColor="#888888"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/etHours"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hours"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Location Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1E1E1E"
+            android:elevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/etLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#2A2A2A"
+                    android:padding="16dp"
+                    android:text="Location"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Payment Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1E1E1E"
+            android:elevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAYMENT"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
+                    android:letterSpacing="0.1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Hourly wage"
+                        android:textColor="#CCCCCC"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/etPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Applicants Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1E1E1E"
+            android:elevation="4dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="APPLICANTS"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/tvNoApplicants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No applicants yet"
+                    android:textAlignment="center"
+                    android:textColor="#888888"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    android:padding="20dp" />
+
+                <ListView
+                    android:id="@+id/listViewApplicants"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:divider="#333333"
+                    android:dividerHeight="1dp"
+                    android:scrollbars="none"
+                    android:background="@color/transparent" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Action Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteRequest"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Delete Request"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="#FF5252"
+                app:cornerRadius="25dp"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+        <!-- Hidden TextView for compatibility -->
         <TextView
             android:id="@+id/tvJobDetails"
-            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-        <!-- قائمة المتقدمين -->
-        <TextView
-            android:id="@+id/tvNoApplicants"
-            android:text="No One"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textAlignment="center"
-            android:textColor="#888888"
-            android:layout_marginTop="10dp" />
-
-        <ListView
-            android:id="@+id/listViewApplicants"
-            android:layout_width="match_parent"
-            android:layout_height="247dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="1dp"
-            android:scrollbars="none" />
-
+            android:visibility="gone" />
 
     </LinearLayout>
+
 </ScrollView>
